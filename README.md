@@ -1,12 +1,12 @@
 # DataSHS2026_TopicModel
 
-Ce dépôt contient le support de la présentation sur les topics models réalisée lors de la semaine data-shs sur Bordeaux le jeudi 11 décembre 2025 à Pessac, ainsi que les support pour le TP.
+Ce dépôt contient le support de la présentation sur les topics models réalisée lors de la semaine data-shs sur Bordeaux le jeudi 11 décembre 2025 à Pessac, ainsi que les support pour le TP. (dépôt à venir)
 
 Lien vers la présentation
 
 ## Pré-requis
 
-LA version de R utilisé pour la présentation est la 4.5.0
+La version de R utilisé pour la présentation est la 4.5.0
 
 Voici la liste des packages nécessaire pour réaliser le TP
 
@@ -83,7 +83,7 @@ if(length(missing_packages)) install.packages(missing_packages,
 # Chargement des packages nécessaires
 lapply(my_packages, library, character.only = TRUE)
 
-# Si difficulté possible de passer par les dépôts de github
+# Si difficultés possible de passer par les dépôts de github
  install.packages("devtools")
 devtools::install_github("nikita-moor/ldatuning")
 
