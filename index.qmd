@@ -1,0 +1,1289 @@
+---
+title: "Semaine Data SHS 2025"
+subtitle: <img src="figure/livre.webp" width="280" style="margin-bottom:0px;"/>
+author: "Initiation au Topic Modeling avec R<Br>"
+institute: |
+  Grégoire Le Campion - 11 décembre 2025<Br>
+format:
+  revealjs:
+    theme: dark
+    navigation-mode: vertical
+    transition: convex
+    css: styles.css
+    chalkboard: true
+    pointer:
+      pointerSize: 18
+embed-ressources: true
+lightbox: true
+editor: visual
+---
+
+## Objectif
+
+<p style="font-size:80%;margin-top:50px;">
+
+1- Une brève introduction théorique au Topic Model
+
+</p>
+
+<p style="font-size:80%;margin-top:50px;">
+
+2- Réaliser toute cette analyse et un peu plus avec R
+
+</p>
+
+## C.N.I du topic modeling
+
+<p style="font-size:80%;margin-top:50px;">
+
+1- C'est une méthode qui appartient au champs de l'apprentissage non supervisé et au TAL (ou NLP en anglais).
+
+</p>
+
+<p style="font-size:80%;margin-top:50px;">
+
+2- Elle repose sur des modèles probabilistes et il existe plusieurs méthodes de topics modeling basées sur différents algorithmes.
+
+</p>
+
+<p style="font-size:80%;margin-top:50px;">
+
+3- C'est une approche complète qui repose sur plusieurs métrique et permet de nombreuses représentations.
+
+</p>
+
+<p style="font-size:80%;margin-top:50px;">
+
+4 - Méthode complètement différente de la méthode de classification proposée par Iramuteq... **MAIS** selon moi très complémentaire !
+
+</p>
+
+## L'idée à la base du Topic Modeling
+
+<p style="font-size:80%;margin-top:50px;">
+
+*1-* Un texte va être composé d'un ou de plusieurs topic ou thème. Un texte pourra alors être représenté par une combinaison de ces thèmes.
+
+<Br>
+
+*2-* Et chaque thème (ou topic) va donc être caractérisé par un ensemble de mots, il s'agit en fait de clusters de mots.
+
+</p>
+
+<p style="font-size:80%;margin-top:50px;">
+
+**Le postulat de base c'est donc que chaque document parle de plusieurs sujets (topics), et que chaque sujet correspond à un ensemble de mots qui apparaissent souvent ensemble.**
+
+</p>
+
+<p style="text-align: center; margin-top:50px; font-size: 110%;">
+
+[**Tout l'enjeu du topic modeling va être de capturer cette intuition dans un cadre mathématique qui permet d'examiner un ensemble de documents et de découvrir, à partir des statistiques sur les mots, quels pourraient être les thèmes et quelle est la proportion de chaque thème dans chaque document.**]{style="color:#4178bc;"}
+
+</p>
+
+## Sur quoi repose le topic modeling
+
+<p style="font-size:80%;margin-top:50px;">
+
+Petite chronologie de l'agorithme derrière le topic modeling :
+
+1- Latent Semantic Analysis (LSA) dont la publication date de 1990.
+
+2- Probabilistic latent semantic analysis (PLSA), développé par Thomas Hofmann et publiée en 1999.
+
+3- **Latent Dirichlet Allocation (LDA)** : La méthode de référence pendant de nombreuses années qui est encore utilisé aujourd'hui. Développé par [Blei, Ng et Jordan](http://www.jmlr.org/papers/volume3/blei03a/blei03a.pdf), publié en 2003.
+
+4- **Etc.**
+
+</p>
+
+<p style="font-size:80%;margin-top:50px;">
+
+Chacune de ces méthodes s'inspirant de la précédente et venant en corriger une limite.
+
+</p>
+
+## Latent Dirichlet Allocation (LDA)
+
+<p style="font-size:80%;margin-top:50px;">
+
+**C'est donc une méthode qui est très utilisé et encore aujourd'hui la mieux implémenté dans R.**
+
+</p>
+
+<p style="font-size:80%;margin-top:50px;">
+
+LDA adopte une approche probabiliste, et repose donc sur les deux hypothèses du topic modeling pour rappel :
+
+-   Chaque texte est un mélange de plusieurs topics
+-   Chaque topic est un mélange de mots avec certaines probabilités d'appartenance au topic.
+
+</p>
+
+<p style="text-align: center; margin-top:50px; font-size: 110%;">
+
+[**L'algorithme va donc chercher à estimer deux probabilités essentielles :**]{style="color:#4178bc;"}
+
+[**- La distribution des topics pour chaque texte document.**]{style="color:#4178bc;"}
+
+[**- La distribution des mots pour chaque topic**]{style="color:#4178bc;"}
+
+</p>
+
+## Latent Dirichlet Allocation (LDA) II
+
+<p style="text-align: center; margin-top:50px; font-size: 80%;">
+
+L'algorithme va agir en 3 étape :
+
+1- assigne aléatoirement à chaque mot un topic parmi un nombre K de topics qui aura été spécifié en amont.
+
+2- parcourt chaque document mot à mot, et met à jour les topics de chaque mot, par un calcul de probabilité.
+
+3- le processus d'assignation est répété de nombreuses fois jusqu'à stabilité du modèle.
+
+</p>
+
+
+
+<p style="text-align: center; margin-top:50px; font-size: 60%;">
+
+Pour réaliser cela LDA va proposer deux méthodes :
+
+*Échantillonnage de Gibbs (Gibbs Sampling)* : méthode de Monte Carlo par chaînes de Markov qui échantillonne itérativement les assignations de sujets pour chaque mot. Cette méthode converge généralement mieux.
+
+*Inférence variationnelle bayésienne (Variational Bayes)* : approche déterministe qui reformule l'inférence comme un problème d'optimisation. L'inférence variationnelle est souvent plus efficace que l'échantillonnage de Gibbs pour les grands corpus.
+
+</p>
+
+
+## Comment choisir le nombre de topics ?
+
+<p style="text-align: center; margin-top:50px; font-size: 80%;">
+
+**C'est le paramètre fondamental de notre analyse.**
+
+> Un nombre trop faible et on obtient quelques thèmes très généraux, un trop grand nombre et on va obtenir des topics qui se chevauchent et/ou ininterprétable.
+
+</p>
+
+<p style="text-align: center; margin-top:50px; font-size: 80%;">
+
+La solution recommandé est une **approche mixte alliant une démarche quantitative et qualitative**.
+
+</p>
+
+<p style="text-align: center; margin-top:50px; font-size: 80%;">
+
+[**Point crucial : Les métriques quantitatives guident, mais l'interprétabilité humaine doit avoir le dernier mot. Un modèle avec d'excellentes métriques mais des topics incompréhensibles est inutile en pratique.**]{style="color:#4178bc;"}
+
+</p>
+
+## Comment choisir le nombre de topics ? II
+
+<p style="text-align: center; margin-top:50px; font-size: 80%;">
+
+1- Explorer un nombre adéquat de topics à l'aide du package `ldatunig` qui propose 4 métriques basées sur la littérature (Griffiths 2004, Cao 2009, Arun 2010, Deveaud 2014).
+
+</p>
+
+<p style="text-align: center; margin-top:50px; font-size: 80%;">
+
+2- Etudier la perplexité et la cohérence des topic obtenus.
+
+> La perplexité mesure la capacité prédictive du modèle pour de nouveaux documents. Une perplexité faible indique une meilleure capacité de prédiction. Cependant, la perplexité ne capture pas la cohérence sémantique des sujets.
+
+> La cohérence mesure la qualité sémantique des sujets en comparant la similarité sémantique entre les mots les plus fréquents d'un sujet. Un score de cohérence élevé (proche de 1) indique que les mots d'un sujet sont sémantiquement liés. La cohérence reflète mieux l'interprétabilité humaine des sujets que la perplexité.
+
+</p>
+
+<p style="text-align: center; margin-top:50px; font-size: 80%;">
+
+3- Analyse qualitative des topics obtenus pour évaluer leur sens et leur interprétabilité.
+
+</p>
+
+## Conclusion avec la théorie
+
+<p style="text-align: center; margin-top:50px; font-size: 80%;">
+
+Ce champs **continue d'évoluer et est très dynamique** !
+
+> les dernières techniques publiées datent de **2024 et 2025**.
+
+> Ces nouvelles méthodes sont très axées sur une intégration de modèle avec des réseaux de neurones ou encore de l'IA.
+
+</p>
+
+<p style="text-align: center; margin-top:50px; font-size: 80%;">
+
+On peut toutefois citer le **correlated topics model** (CTM; Blei and Lafferty 2007) qui est une extension de la méthode LDA où les topics peuvent être corrélés.
+
+Ou encore la méthode **BERTopic** qui intègre le contexte et le sens des mots, méthode développé en 2022 par [Grootendorst](https://arxiv.org/abs/2203.05794) qui va aussi utilisé des méthodes non paramétrique de réduction de dimensions. Cette méthode est de plus en plus employée, très intéressantes et **tant à devenir la méthode de référence**.
+
+</p>
+
+## **Merci de votre attention et à vous de jouer !**
+
+</h2>
+
+<p class="small" style="text-align: center;">
+
+Pour accéder aux données et au dépôt : [**https://github.com/LeCampionG/DataSHS2026_TopicModel/tree/main**](https://github.com/LeCampionG/DataSHS2026_TopicModel/tree/main)
+
+</p>
+::: r-stack
+<img src="figure/batman.webp" width="600" style="margin-top:15px;margin-bottom:0px"/>
+:::
+
+<br> <br>
+
+**Contact** : [gregoire.lecampion\@cnrs.fr](mailto:gregoire.lecampion@cnrs.fr){.email} <br>**Diapositives libres** (CC BY-SA 4.0)
+
+</p>
+
+## Les données !
+
+Les données que nous allons travaillé aujourd'hui : un corpus textuel de qualité sur la Bretagne !
+
+En bref, le contenu brut de 8 pages wikipédia sur des fondamentaux de la région Bretagne!
+
+Notre point de départ peut être :
+
+1- Des fichiers TXT brutes dans un dossier (**notre cas ici**)
+
+2- Un fichier excel
+
+3- Ou encore un fichier avec des mots déjà lemmatisés sortie d'un autre logiciel
+
+::: r-stack
+<img src="figure/image.png" width="800" style="margin-top:15px;margin-bottom:0px"/>
+:::
+
+## Chargement des données
+
+Si votre corpus texte a déjà fait l'objet d'une analyse par exemple via Iramuteq, il a donc déjà subit un certain nombre d'étape de préparation que nous allons voir maintenant, Dans ce cas vous pouvez vous rendre directement à la case DTM !
+
+
+``` r
+# ==============================================================================
+# 1. CHARGEMENT DES FICHIERS TXT AVEC MÉTADONNÉES
+# ==============================================================================
+
+ library(here)
+
+ # Définir le répertoire contenant vos fichiers txt
+ 
+chemin_dossier <- here("fichier_txt")
+
+ 
+# Lire tous les fichiers txt et extraire les métadonnées du nom de fichier
+# readtext extrait automatiquement le nom du fichier comme doc_id
+
+library(readtext)
+
+data_txt <- readtext(chemin_dossier, 
+                     encoding = "UTF-8")
+
+# Afficher les premières lignes
+
+print(head(data_txt))
+
+
+# Ajouter des métadonnées personnalisées basées sur le nom du fichier
+
+# Par exemple le nom de base
+library(stringr)
+
+data_txt$source <- sub("\\..*$", "", data_txt$doc_id)
+
+# si les metadonnées sont dans le titre du fichier
+# Si vos fichiers sont nommés par exemple comme ceci : "meta1_meta2_titre.txt"
+#data_txt$meta1 <- sapply(strsplit(data_txt$doc_id, "_"), `[`, 1)
+#data_txt$meta2 <- sapply(strsplit(data_txt$doc_id, "_"), `[`, 2)
+
+# Ou à partir d'un fichier de correspondances
+# Joindre avec les données
+
+csv_path <- here("metadata", "metadata.csv")
+# Lecture du CSV dans un dataframe
+metadata <- read.csv2(csv_path)
+
+library(dplyr)
+
+data_txt <- left_join(data_txt, metadata, by = "doc_id")
+```
+
+## Création du corpus
+
+``` r
+# ==============================================================================
+# 2. CRÉATION DU CORPUS QUANTEDA
+# ==============================================================================
+
+library(quanteda)
+
+# Créer le corpus avec les métadonnées
+corpus_txt <- corpus(data_txt, 
+                     text_field = "text",
+                     docid_field = "doc_id")
+
+# Afficher un résumé du corpus
+
+summary(corpus_txt, n = 8)
+
+# Visualiser les métadonnées (docvars)
+
+print(head(docvars(corpus_txt)))
+
+# Si vous voulez faire des filtres à l'aide des métadonnées
+corpus_gastro <- corpus_subset(corpus_txt, sujet == "gastronomie")
+corpus_cat_1 <- corpus_subset(corpus_txt, cat == 1)
+
+# Grouper par métadonnées
+corpus_cat <- corpus_group(corpus_txt, groups = cat)
+
+#Si vous souhaitez visualiser les 200 premiers charactères du 1er texte
+cat(substr(as.character(corpus_txt)[1], 1, 200), "...\n\n")
+```
+
+## La Tokenisation
+
+<img src="figure/alert.png" width="30" style="margin-top:0px;margin-bottom:-7px;margin-right:8px;"/>[**C'est une étape importante de la préparation des données, qui nous permets de passer du corpus au "mot".**]{style="color:#4178bc;"}
+
+``` r
+
+# ==============================================================================
+# 3. PRÉTRAITEMENT DU CORPUS
+# ==============================================================================
+
+# Tokenisation et nettoyage
+
+# Tokeniser le corpus
+tokens_txt <- tokens(corpus_txt,
+                     remove_punct = TRUE,      # Retirer ponctuation
+                     remove_numbers = TRUE,    # Retirer nombres
+                     remove_symbols = TRUE)    # Retirer symboles
+
+# Convertir en minuscules
+tokens_txt <- tokens_tolower(tokens_txt)
+
+# Retirer les stopwords français
+# Etape sensible !
+
+tokens_txt <- tokens_remove(tokens_txt, 
+                            pattern = stopwords("fr"))
+
+
+# Optionnel : Ajouter vos propres mots à exclure
+stop_proust <- proustr::proust_stopwords()
+
+# Optionnel : Ajouter vos propres mots à exclure
+mots_exclus <- c("peut", "faire", "donc", "ainsi", "cela")
+
+# Optionnel : mots supplémentaire iramuteq
+
+mots_supp<- c("a","ŕ","ŕ dieu vat","ŕ l'encontre","a l'instar","ŕ l'instar","acré","adieu","afin","afin d","afin de","afin qu","afin que","ah","ai","aie","aďe","aient","aies","ailleurs","ains","ainsi","ait","alentour","alentours","alerte","alias","alléluia","allo","allô","alors","am stram gram","amen","an","ans","anti","aprčs","arričre","as","ase","assez","atchoum","attention","au","au dessus","aube","aucun","aucune","aucunement","aucunes","aucuns","audit","aujourd hui","auparavant","auprčs","auquel","aura","aurai","auraient","aurais","aurait","auras","aurez","auriez","aurions","aurons","auront","aussi","autant","autour","autours","autre","autrefois","autres","autrichiens","autrui","aux","auxdits","auxquelles","auxquels","avaient","avais","avait","avant","avants","avec","avez","aviez","avions","avoir","avoirs","avons","ayant","ayez","ayons","b","badabam","badaboum","bah","balle peau","balpeau","banco","bang","basta","baste","bé","beaucoup","because","ben","berk","bernique","beu","beuark","beurk","bicause","bien","biens","bigre","bim","bing","bis","bof","bon","bonne","bonnes","bons","boudiou","boudu","bouf","bougre","boum","boums","bravo","broum","brrr","bye","bye bye","c","c est ŕ dire","ça","calmos","car","caramba","cars","ce","ceci","cela","celle","celle ci","celle lŕ","celles","celles ci","celles lŕ","celui","celui ci","celui lŕ","cent","cents","cependant","certain","certaine","certaines","certains","certes","ces","cet","cette","ceux","ceux ci","ceux lŕ","chacun","chacune","chaque","chez","chic","chiche","chouette","chut","ci","ci aprčs","ci contre","ci dessous","ci dessus","ci inclus","ci inclus","ci inclus")
+
+mots_supp2<- c("ci joint","ci joint","ci joint","ciao","cinq","cinquante","cinquante cinq","cinquante deux","cinquante huit","cinquante neuf","cinquante quatre","cinquante sept","cinquante six","cinquante trois","clac","clic","clic clac","combien","comme","comment","con","concernant","contre","contres","cot cot codec","couic","crac","cré","crénom","cric crac","cristi","croie","croient","croies","croira","croirai","croiraient","croirais","croirait","croiras","croire","croirez","croiriez","croirions","croirons","croiront","crois","croit","croyaient","croyais","croyait","croyant","croyez","croyiez","croyions","croyons","cru","crue","crűmes","crurent","crus","crusse","crussent","crusses","crut","crűt","d","d ","d abord","da","dame","damned","dans","davantage","dc","de","debout","dedans","dehors","déjŕ","demain","demains","demi","demie","demies","demis","depuis","derričre","des","dčs","desdites","desdits","desquelles","desquels","dessous","dessus","deux","devaient","devais","devait","devant","devants","devers","devez","deviez","devions","devoir","devoirs","devons","devra","devrai","devraient","devrais","devrait","devras","devrez","devriez","devrions","devrons","devront","dia","diable","diantre","différents","dig","ding","dira","dirai","diraient","dirais","dirait","diras","dire","dirent","dires","direz","diriez","dirions","dirons","diront","dis","disaient","disais","disait","disant","dise","disent","dises","disiez","disions","disons","dissent","dit","dît","dite","dites","dîtes","dits","divers","diverses","dix","dix huit","dix neuf","dix sept","dm","dois","doit","doive","doivent","doives","dommage","donc","dong","dont","douze","dring","du","dű","dudit","due","dues","dűmes","duquel","durant","durent","dus","dusse","dussent","dusses","dussiez","dussions","dut","dűt")
+mots_supp3<- c("e","eh","elle","elle męme","elles","elles męmes","en","encore","enfin","ensuite","entre","envers","environ","environs","es","čs","est","est ce que","et","étaient","étais","était","étant","été","ętes","étiez","étions","ętre","eu","eue","eues","euh","eűmes","euręka","eurent","eus","eusse","eussé","eussent","eusses","eussiez","eussions","eut","eűt","eűtes","eux","eux męmes","excepté","extra","extras","f","faire","fais","faisaient","faisais","faisait","faisant","faisiez","faisions","faisons","fait","faite","faites","fallait","falloir","fallu","fallut","fallűt","fasse","fassent","fasses","fassiez","fassions","faudra","faudrait","faut","fera","ferai","feraient","ferais","ferait","feras","ferez","feriez","ferions","ferons","feront","fi","fichtre","fîmes","firent","fis","fisse","fissent","fissiez","fissions","fit","fît","fîtes","flac","floc","flop","font","force","fors","fort","forte","fortes","fortissimo","forts","fouchtra","franco","fűmes","furent","fus","fusse","fussent","fusses","fussiez","fussions","fut","fűt","fűtes","g","gare","gares","gna gna","gnagnagna","goddam","grâce","grand chose","gué","gy","ha","haha","hai","halte","hardi","hare","hé","hein","hélas","hello","hem","hep","heu","hi","hi han","hic","hier","hip","hisse","ho","holŕ","hom","hon","hop","hormis","hors","hou","houhou","houlŕ","houp","hourra","hourras","hue","hugh","huit","hum","hurrah","icelle","icelles","icelui","ici","il","illico","ils","in","inch allah","inter","inters","itou","j","jadis","jamais","jarnicoton","je","jouxte","jusqu","jusqu ŕ","jusqu au","jusque","juste","justes","l","l ","la","lŕ","la la la","lala","laquelle","las","le","lendemain","lendemains","lequel","les","lčs","lesquelles","lesquels","leur","leurs","lez","loin","longtemps","lors","lorsqu","lorsque","lui","lui męme")
+mots_supp4<- c("m","ma","macarel","macarelle","madame","maint","mainte","maintenant","maintes","maints","mais","mal","male","males","malgré","mâtin","maux","mazette","mazettes","me","męme","męmes","merci","merdasse","merde","merdre","mes","mesdames","messieurs","meuh","mézig","mézigue","mi","miam","miam miam","mien","mienne","miennes","miens","mieux","mil","mille","milles","million","millions","mince","ml","mlle","mm","mme","moi","moi męme","moindre","moindres","moins","mon","monseigneur","monsieur","morbleu","mordicus","mordieu","motus","mouais","moyennant","n","n ","n est ce pas","na","ne","néanmoins","neuf","ni","niet","non","nonante","nonante huit","nonobstant","nos","notre","nôtre","nôtres","nous","nous męme","nous męmes","nul","nulle","nulles","nuls","o","ô","octante","oh","ohé","ok","olé","ollé","on","ont","onze","or","ou","oů","ouah","ouais","ouf","ouh","oui","oui da","ouiche","ouille","oust","ouste","outre","outres","pa","palsambleu","pan","par","par dedans","par delŕ","par derričre","par dessous","par dessus","par devant","par devers","parbleu","parce","parce que","pardi","pardieu","pardon","parfois","parmi","partout","pas","pasque","patapouf","patata","patati","patatras","pchitt","pendant","pendante","pendantes","pendants","personne","personnes","peste","peu","peuchčre","peuh","peut","peut ętre","peuvent","peux","pff","pfft","pfutt","pianissimo","pianissimos","pin pon","pis","plein","ploc","plouf","plupart","plus","plusieurs","point","points","pollope","polope","pouah","pouce","pouf","pouh","pouic","pour","pourquoi","pourra","pourrai","pourraient","pourrais","pourrait","pourras","pourrez","pourriez","pourrions","pourrons","pourront","pourtant","pouvaient","pouvais","pouvait","pouvant","pouvez","pouviez","pouvions","pouvoir","pouvoirs","pouvons","prčs","presque")
+mots_supp5<- c("primo","pristi","prosit","prout","pschitt","pseudo","pseudos","psitt","pst","pu","puis","puisqu","puisque","puissamment","puisse","puissent","puisses","puissiez","puissions","pűmes","purent","pusse","pussent","pusses","pussiez","put","pűt","pűtes","qu","quand","quant","quarante","quarante cinq","quarante deux","quarante huit","quarante neuf","quarante quatre","quarante sept","quarante six","quarante trois","quasi","quatorze","quatre","quatre vingt","quatre vingt cinq","quatre vingt deux","quatre vingt dix huit","quatre vingt dix neuf","quatre vingt dix sept","quatre vingt douze","quatre vingt huit","quatre vingt neuf","quatre vingt onze","quatre vingt quatorze","quatre vingt quatre","quatre vingt quinze","quatre vingt seize","quatre vingt sept","quatre vingt six","quatre vingt treize","quatre vingt trois","quatre vingt un","quatre vingts","que","quel","quelconque","quelconques","quelle","quelles","quelqu un","quelqu une","quelque","quelquefois","quelques","quelques unes","quelques uns","quels","qui","qui vive","quiconque","quinze","quoi","quoique","rantanplan","rasibus","rataplan","re belote","rebelote","recta","revoici","revoilŕ","rez","rien","riens","s","s ","sa","sachant","sache","sachent","saches","sachez","sachiez","sachions","sachons","sacrebleu","sacrédié","sacredieu","sais","sait","salut","sans","saperlipopette","sapristi","sauf","saufs","saura","saurai","sauraient","saurais","saurait","sauras","sauront","savaient","savais","savait","savent","savez","saviez","savions","savoir","savoirs","savons","scrogneugneu","se","sécolle","secundo","seize","selon","sept","septante","septante cinq","septante sept","sera","serai","seraient","serais","serait","seras","serez","seriez","serions","serons","seront","ses","sézigue","si","sic","sien","sienne","siennes","siens")
+mots_supp6<- c("sinon","six","skaal","snif","sniff","soi","soi męme","soient","sois","soit","soixante","soixante cinq","soixante deux","soixante dix","soixante dix huit","soixante dix neuf","soixante dix sept","soixante douze","soixante huit","soixante neuf","soixante quatorze","soixante quatre","soixante quinze","soixante seize","soixante sept","soixante six","soixante treize","soixante trois","sommes","son","sons","sont","soudain","soudaine","soudaines")
+
+mots_supp7<- c("soudains","sous","sous prieur","souvent","soyez","soyons","splash","su","subito","suis","suivant","sűmes","sur","sure","surent","sures","surnombre","surs","surtout","surtouts","sus","susse","sussent","sut","sűt","t","t ","ta","tacatac","tacatacatac","tagada","taďaut","tandis qu","tandis que","tant","tap","taratata","tard","tchao","tchin tchin","tchin tchin","te","té","tel","telle","telles","tels","tertio","tes","tézig","tézigue","tien","tienne","tiennes","tiens","tiens la moi","tintin","to","toi","toi męme","ton","tons","toujours","tous","tout","tout fait","toute","toutefois","toutes","touts","treize","trente","trente cinq","trente deux","trente huit","trente neuf","trente quatre","trente sept","trente six","trente trois","trčs","trois","trop","tu","tudieu","turlututu","u","un","une","unes","uns","v","van","vans","ventre saint gris","ventrebleu","vers","versus","vertubleu","veuille","veuillent","veuilles","veuillez","veulent","veut","veux","via","vingt","vingt cinq","vingt deux","vingt huit","vingt neuf","vingt quatre","vingt sept","vingt six","vingt trois","vis ŕ vis","vite","vivat","vive","vlan","vlouf","voici","voilŕ","voire","volontiers","vos","votre","vôtre","vôtres","voudra","voudrai","voudraient","voudrais","voudrait","voudras","voudrez","voudriez","voudrions","voudrons","voudront","voulaient","voulais","voulait","voulant","voulez","vouliez","voulions","vouloir","vouloirs","voulons","voulu","voulue","voulűmes","voulurent","voulus","voulusse","voulussent","voulut","voulűt","vous","vous męme","vous męmes","vroom","vroum","wouah","x","y","yeah","youp","youpi","yu","zou","zut","zzz","zzzz")
+
+# Sans accent
+mots_supp8<- c("a","a","a dieu vat","a l'encontre","a l'instar","a l'instar","acre","adieu","afin","afin d","afin de","afin qu","afin que","ah","ai","aie","aie","aient","aies","ailleurs","ains","ainsi","ait","alentour","alentours","alerte","alias","alleluia","allo","allô","alors","am stram gram","amen","an","ans","anti","apres","arriere","as","ase","assez","atchoum","attention","au","au dessus","aube","aucun","aucune","aucunement","aucunes","aucuns","audit","aujourd hui","auparavant","aupres","auquel","aura","aurai","auraient","aurais","aurait","auras","aurez","auriez","aurions","aurons","auront","aussi","autant","autour","autours","autre","autrefois","autres","autrichiens","autrui","aux","auxdits","auxquelles","auxquels","avaient","avais","avait","avant","avants","avec","avez","aviez","avions","avoir","avoirs","avons","ayant","ayez","ayons","b","badabam","badaboum","bah","balle peau","balpeau","banco","bang","basta","baste","be","beaucoup","because","ben","berk","bernique","beu","beuark","beurk","bicause","bien","biens","bigre","bim","bing","bis","bof","bon","bonne","bonnes","bons","boudiou","boudu","bouf","bougre","boum","boums","bravo","broum","brrr","bye","bye bye","c","c est a dire","ça","calmos","car","caramba","cars","ce","ceci","cela","celle","celle ci","celle la","celles","celles ci","celles la","celui","celui ci","celui la","cent","cents","cependant","certain","certaine","certaines","certains","certes","ces","cet","cette","ceux","ceux ci","ceux la","chacun","chacune","chaque","chez","chic","chiche","chouette","chut","ci","ci apres","ci contre","ci dessous","ci dessus","ci inclus","ci inclus","ci inclus")
+mots_supp9<- c("ci joint","ci joint","ci joint","ciao","cinq","cinquante","cinquante cinq","cinquante deux","cinquante huit","cinquante neuf","cinquante quatre","cinquante sept","cinquante six","cinquante trois","clac","clic","clic clac","combien","comme","comment","con","concernant","contre","contres","cot cot codec","couic","crac","cre","crenom","cric crac","cristi","croie","croient","croies","croira","croirai","croiraient","croirais","croirait","croiras","croire","croirez","croiriez","croirions","croirons","croiront","crois","croit","croyaient","croyais","croyait","croyant","croyez","croyiez","croyions","croyons","cru","crue","crumes","crurent","crus","crusse","crussent","crusses","crut","crut","d","d ","d abord","da","dame","damned","dans","davantage","dc","de","debout","dedans","dehors","deja","demain","demains","demi","demie","demies","demis","depuis","derriere","des","des","desdites","desdits","desquelles","desquels","dessous","dessus","deux","devaient","devais","devait","devant","devants","devers","devez","deviez","devions","devoir","devoirs","devons","devra","devrai","devraient","devrais","devrait","devras","devrez","devriez","devrions","devrons","devront","dia","diable","diantre","differents","dig","ding","dira","dirai","diraient","dirais","dirait","diras","dire","dirent","dires","direz","diriez","dirions","dirons","diront","dis","disaient","disais","disait","disant","dise","disent","dises","disiez","disions","disons","dissent","dit","dit","dite","dites","dites","dits","divers","diverses","dix","dix huit","dix neuf","dix sept","dm","dois","doit","doive","doivent","doives","dommage","donc","dong","dont","douze","dring","du","du","dudit","due","dues","dumes","duquel","durant","durent","dus","dusse","dussent","dusses","dussiez","dussions","dut","dut")
+mots_supp10<- c("e","eh","elle","elle meme","elles","elles memes","en","encore","enfin","ensuite","entre","envers","environ","environs","es","es","est","est ce que","et","etaient","etais","etait","etant","ete","etes","etiez","etions","etre","eu","eue","eues","euh","eumes","eureka","eurent","eus","eusse","eusse","eussent","eusses","eussiez","eussions","eut","eut","eutes","eux","eux memes","excepte","extra","extras","f","faire","fais","faisaient","faisais","faisait","faisant","faisiez","faisions","faisons","fait","faite","faites","fallait","falloir","fallu","fallut","fallut","fasse","fassent","fasses","fassiez","fassions","faudra","faudrait","faut","fera","ferai","feraient","ferais","ferait","feras","ferez","feriez","ferions","ferons","feront","fi","fichtre","fimes","firent","fis","fisse","fissent","fissiez","fissions","fit","fit","fites","flac","floc","flop","font","force","fors","fort","forte","fortes","fortissimo","forts","fouchtra","franco","fumes","furent","fus","fusse","fussent","fusses","fussiez","fussions","fut","fut","futes","g","gare","gares","gna gna","gnagnagna","goddam","grâce","grand chose","gue","gy","ha","haha","hai","halte","hardi","hare","he","hein","helas","hello","hem","hep","heu","hi","hi han","hic","hier","hip","hisse","ho","hola","hom","hon","hop","hormis","hors","hou","houhou","houla","houp","hourra","hourras","hue","hugh","huit","hum","hurrah","icelle","icelles","icelui","ici","il","illico","ils","in","inch allah","inter","inters","itou","j","jadis","jamais","jarnicoton","je","jouxte","jusqu","jusqu a","jusqu au","jusque","juste","justes","l","l ","la","la","la la la","lala","laquelle","las","le","lendemain","lendemains","lequel","les","les","lesquelles","lesquels","leur","leurs","lez","loin","longtemps","lors","lorsqu","lorsque","lui","lui meme")
+mots_supp11<- c("m","ma","macarel","macarelle","madame","maint","mainte","maintenant","maintes","maints","mais","mal","male","males","malgre","mâtin","maux","mazette","mazettes","me","meme","memes","merci","merdasse","merde","merdre","mes","mesdames","messieurs","meuh","mezig","mezigue","mi","miam","miam miam","mien","mienne","miennes","miens","mieux","mil","mille","milles","million","millions","mince","ml","mlle","mm","mme","moi","moi meme","moindre","moindres","moins","mon","monseigneur","monsieur","morbleu","mordicus","mordieu","motus","mouais","moyennant","n","n ","n est ce pas","na","ne","neanmoins","neuf","ni","niet","non","nonante","nonante huit","nonobstant","nos","notre","nôtre","nôtres","nous","nous meme","nous memes","nul","nulle","nulles","nuls","o","ô","octante","oh","ohe","ok","ole","olle","on","ont","onze","or","ou","ou","ouah","ouais","ouf","ouh","oui","oui da","ouiche","ouille","oust","ouste","outre","outres","pa","palsambleu","pan","par","par dedans","par dela","par derriere","par dessous","par dessus","par devant","par devers","parbleu","parce","parce que","pardi","pardieu","pardon","parfois","parmi","partout","pas","pasque","patapouf","patata","patati","patatras","pchitt","pendant","pendante","pendantes","pendants","personne","personnes","peste","peu","peuchere","peuh","peut","peut etre","peuvent","peux","pff","pfft","pfutt","pianissimo","pianissimos","pin pon","pis","plein","ploc","plouf","plupart","plus","plusieurs","point","points","pollope","polope","pouah","pouce","pouf","pouh","pouic","pour","pourquoi","pourra","pourrai","pourraient","pourrais","pourrait","pourras","pourrez","pourriez","pourrions","pourrons","pourront","pourtant","pouvaient","pouvais","pouvait","pouvant","pouvez","pouviez","pouvions","pouvoir","pouvoirs","pouvons","pres","presque")
+mots_supp12<- c("primo","pristi","prosit","prout","pschitt","pseudo","pseudos","psitt","pst","pu","puis","puisqu","puisque","puissamment","puisse","puissent","puisses","puissiez","puissions","pumes","purent","pusse","pussent","pusses","pussiez","put","put","putes","qu","quand","quant","quarante","quarante cinq","quarante deux","quarante huit","quarante neuf","quarante quatre","quarante sept","quarante six","quarante trois","quasi","quatorze","quatre","quatre vingt","quatre vingt cinq","quatre vingt deux","quatre vingt dix huit","quatre vingt dix neuf","quatre vingt dix sept","quatre vingt douze","quatre vingt huit","quatre vingt neuf","quatre vingt onze","quatre vingt quatorze","quatre vingt quatre","quatre vingt quinze","quatre vingt seize","quatre vingt sept","quatre vingt six","quatre vingt treize","quatre vingt trois","quatre vingt un","quatre vingts","que","quel","quelconque","quelconques","quelle","quelles","quelqu un","quelqu une","quelque","quelquefois","quelques","quelques unes","quelques uns","quels","qui","qui vive","quiconque","quinze","quoi","quoique","rantanplan","rasibus","rataplan","re belote","rebelote","recta","revoici","revoila","rez","rien","riens","s","s ","sa","sachant","sache","sachent","saches","sachez","sachiez","sachions","sachons","sacrebleu","sacredie","sacredieu","sais","sait","salut","sans","saperlipopette","sapristi","sauf","saufs","saura","saurai","sauraient","saurais","saurait","sauras","sauront","savaient","savais","savait","savent","savez","saviez","savions","savoir","savoirs","savons","scrogneugneu","se","secolle","secundo","seize","selon","sept","septante","septante cinq","septante sept","sera","serai","seraient","serais","serait","seras","serez","seriez","serions","serons","seront","ses","sezigue","si","sic","sien","sienne","siennes","siens")
+mots_supp13<- c("sinon","six","skaal","snif","sniff","soi","soi meme","soient","sois","soit","soixante","soixante cinq","soixante deux","soixante dix","soixante dix huit","soixante dix neuf","soixante dix sept","soixante douze","soixante huit","soixante neuf","soixante quatorze","soixante quatre","soixante quinze","soixante seize","soixante sept","soixante six","soixante treize","soixante trois","sommes","son","sons","sont","soudain","soudaine","soudaines")
+mots_supp14<- c("soudains","sous","sous prieur","souvent","soyez","soyons","splash","su","subito","suis","suivant","sumes","sur","sure","surent","sures","surnombre","surs","surtout","surtouts","sus","susse","sussent","sut","sut","t","t ","ta","tacatac","tacatacatac","tagada","taiaut","tandis qu","tandis que","tant","tap","taratata","tard","tchao","tchin tchin","tchin tchin","te","te","tel","telle","telles","tels","tertio","tes","tezig","tezigue","tien","tienne","tiennes","tiens","tiens la moi","tintin","to","toi","toi meme","ton","tons","toujours","tous","tout","tout fait","toute","toutefois","toutes","touts","treize","trente","trente cinq","trente deux","trente huit","trente neuf","trente quatre","trente sept","trente six","trente trois","tres","trois","trop","tu","tudieu","turlututu","u","un","une","unes","uns","v","van","vans","ventre saint gris","ventrebleu","vers","versus","vertubleu","veuille","veuillent","veuilles","veuillez","veulent","veut","veux","via","vingt","vingt cinq","vingt deux","vingt huit","vingt neuf","vingt quatre","vingt sept","vingt six","vingt trois","vis a vis","vite","vivat","vive","vlan","vlouf","voici","voila","voire","volontiers","vos","votre","vôtre","vôtres","voudra","voudrai","voudraient","voudrais","voudrait","voudras","voudrez","voudriez","voudrions","voudrons","voudront","voulaient","voulais","voulait","voulant","voulez","vouliez","voulions","vouloir","vouloirs","voulons","voulu","voulue","voulumes","voulurent","voulus","voulusse","voulussent","voulut","voulut","vous","vous meme","vous memes","vroom","vroum","wouah","x","y","yeah","youp","youpi","yu","zou","zut","zzz","zzzz")
+
+
+mot_supp_iramuteq <- c(mots_supp, mots_supp2, mots_supp3, mots_supp4, mots_supp5, mots_supp6, mots_supp7, mots_supp8, mots_supp9, mots_supp10, mots_supp11, mots_supp12, mots_supp13, mots_supp14)
+
+# Nouvelles suppression des mots supplémentaires
+tokens_txt <- tokens_remove(tokens_txt, pattern = c(stop_proust, mot_supp_iramuteq, mots_exclus ))
+
+# Optionnel : Stemming (réduction à la racine)
+# tokens_txt <- tokens_wordstem(tokens_txt, language = "french")
+
+# Optionnel : Ne garder que les mots de 2 caractères ou plus
+tokens_txt <- tokens_select(tokens_txt, min_nchar = 2)
+
+```
+
+## Lemmatiser
+
+<img src="figure/alert.png" width="30" style="margin-top:0px;margin-bottom:-7px;margin-right:8px;"/>[**C'est une étape sensible et pas forcément nécessaire, à voir en fonction de vos besoins et hypothèses**]{style="color:#4178bc;"}
+
+``` r
+#==============================================================================
+# 3bis. LEMMATISATION EN FRANÇAIS
+# ==============================================================================
+
+# Sachez qu'il est aussi possible d'utiliser les package spacyr et udpipe
+# La documentation et l'aide est très riche
+
+#==============================================================================
+# Lemmatisation simplifiée avec un dictionnaire personnalisé venu d'Iramuteq
+# ==============================================================================
+
+# En utilisant le dictionnaire Iramuteq
+
+dico_path <- here("dictionnaire_iramuteq.csv")
+
+lemma_dict <- read.csv(dico_path) # format: nom,lemme
+
+ 
+ tokens_lemma <- tokens_replace(tokens_txt, 
+                                pattern = lemma_dict$nom,
+                                replacement = lemma_dict$lemme)
+                                
+```
+
+## Création du DFM
+
+``` r
+# ==============================================================================
+# 4. CRÉATION DE LA MATRICE DOCUMENT-FEATURE (DFM)
+# ==============================================================================
+
+# Si votre corpus en entrée correspond à une base de données avec des variables de type texte, mots, nombre. Comme ce qu'on peut obtenir après certaines analyses réalisés avec certains logiciel de textométrie, vous pouvez utiliser ce code
+#   dtm_ira<- data_ira %>% 
+#     cast_dtm(texte, term = mots, value = nombre)
+
+# Créer la DFM lemmatisée
+dfm_dico <- dfm(tokens_lemma)
+
+# Un DFM (ou DTM) se construit comme ceci
+##En lignes : les documents
+##En colonnes : les mots (termes)
+##En cellules : la fréquence de chaque mot dans chaque document
+
+print(dfm_dico)
+
+# Etudier la sparsité de notre DFM
+## La sparsité mesure la proportion de zéro de notre DFM
+## C'est à dire la proportion des mots qui ne serait pas dans tous les documents
+
+cat("Sparsité:", round(sparsity(dfm_dico) * 100, 2), "%\n\n")
+
+# Réduire la sparsité (optionnel)
+# Garder les termes qui apparaissent dans au moins 2 documents (recommandation de la doc de Quanteda)
+# Masi en réalité c'est vous qui savez en fonction du matériuax utilisé et des hypothèses
+
+dfm_reduit <- dfm_trim(dfm_dico, min_docfreq = 2)
+cat("Après réduction - Sparsité:", round(sparsity(dfm_dico) * 100, 2), "%\n\n")
+
+
+################ Transformer le DFM en un dataframe source mot frequence
+
+library(tidytext)
+
+df_long_dico <- tidy(dfm_dico)
+
+# Ajouter les metadonnées pour chaque document
+
+df_long_dico$source <- docvars(dfm_dico, "source")[match(df_long_dico$document, 
+                                                             docnames(dfm_dico))]
+
+df_long_dico$cat <- docvars(dfm_dico, "cat")[match(df_long_dico$document, 
+                                                             docnames(dfm_dico))]                                                            
+ df_long_dico$sujet <- docvars(dfm_dico, "sujet")[match(df_long_dico$document, 
+                                                             docnames(dfm_dico))]                                                            
+
+# Réorganiser les colonnes : mot, source, fréquence
+df_final_dico <- df_long_dico %>%
+  select(term, source, count, cat, sujet) %>%
+  arrange(source, desc(count))
+
+# Renommer les colonnes en français
+colnames(df_final_dico) <- c("mot", "texte_source", "frequence", "categorie", "sujet")
+
+```
+
+## Un peu d'exploration
+
+``` r
+
+# ==============================================================================
+# 5. ANALYSES BASIQUES AVEC CONSERVATION DE L'ORIGINE
+# ==============================================================================
+
+library(quanteda.textplots)
+library(quanteda.textstats)
+
+# Fréquences des termes
+freq_features <- textstat_frequency(dfm_dico)
+cat("=== Top 20 des termes les plus fréquents ===\n")
+print(head(freq_features, 20))
+
+# Visualisation des top termes
+
+library(ggplot2)
+
+top_features <- head(freq_features, 15)
+ggplot(top_features, aes(x = reorder(feature, frequency), y = frequency)) +
+  geom_col(fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Top 15 des termes les plus fréquents",
+       x = "Termes", y = "Fréquence") +
+  theme_minimal()
+
+# Nuage de mots via quanteda
+
+textplot_wordcloud(dfm_dico, 
+                   min_count = 5, 
+                   max_words = 100,
+                   rotation = 0,
+                   random_color = FALSE,
+                   color = "Black")
+
+# nuage de mots comparatif avec quanteda
+textplot_wordcloud(dfm_dico, 
+                   min_count = 5, 
+                   max_words = 100, comparison = TRUE)
+
+# ==============================================================================
+# 6. ANALYSE PAR SOURCE/DOCUMENT
+# ==============================================================================
+
+
+# Créer un dataframe avec statistiques par document
+stats_docs <- data.frame(
+  doc_id = docnames(dfm_dico),
+  source = docvars(dfm_dico, "source"),
+  cat = docvars(dfm_dico, "cat"),
+  sujet = docvars(dfm_dico, "sujet"),
+  n_tokens = ntoken(dfm_dico),
+  n_types = ntype(dfm_dico),
+  lexical_diversity = ntype(dfm_dico) / ntoken(dfm_dico)
+)
+
+print(stats_docs)
+
+# Visualisation : nombre de tokens par document
+ggplot(stats_docs, aes(x = reorder(doc_id, n_tokens), y = n_tokens)) +
+  geom_col(fill = "coral") +
+  coord_flip() +
+  labs(title = "Nombre de tokens par document",
+       x = "Document (source)", y = "Nombre de tokens") +
+  theme_minimal()
+
+# ==============================================================================
+# 7. GROUPER PAR MÉTADONNÉES 
+# ==============================================================================
+
+
+# Exemple : grouper par sujet
+ dfm_grouped <- dfm_group(dfm_dico, groups = sujet)
+# 
+# # Comparer les termes les plus fréquents par groupe
+ freq_by_group <- textstat_frequency(dfm_grouped, groups = docvars(dfm_grouped, "sujet"))
+ print(head(freq_by_group, 30))
+
+# ==============================================================================
+# 8. ANALYSE DE SIMILARITÉ ENTRE DOCUMENTS
+# ==============================================================================
+
+# Réaliser une Matrice de similarité entre documents
+
+# Calculer la similarité cosinus entre documents
+##La similarité cosinus mesure la ressemblance entre deux documents en calculant l'angle entre leurs vecteurs dans l'espace multidimensionnel des mots.
+##Chaque document est représenté comme un vecteur où chaque dimension = un mot du vocabulaire.
+## Est compris entre -1 et 1. Plus est proche de 1 plus les textes sont similaires, autour de 0 complètement différents (aucun mot commun), plus on se rapproche de -1 plus les textes s'opposent
+
+simil_matrix <- textstat_simil(dfm_dico, 
+                               method = "cosine",
+                               margin = "documents")
+
+# Convertir en matrice pour visualisation
+simil_df <- as.matrix(simil_matrix)
+
+# Afficher les 5 premières lignes/colonnes
+print(simil_df[1:min(5, nrow(simil_df)), 1:min(5, ncol(simil_df))])
+
+# ==============================================================================
+# 9. EXTRACTION DE TERMES CLÉS PAR DOCUMENT : TF-IDF
+# ==============================================================================
+
+
+# Le TF-IDF (Term Frequency-Inverse Document Frequency) est une mesure statistique qui évalue l'importance relative d'un mot dans un document par rapport à un corpus entier.
+# Calculer le TF-IDF
+dfm_tfidf <- dfm_tfidf(dfm_dico)
+
+doc_name <- docnames(dfm_tfidf)[1]
+source_name <- docvars(dfm_tfidf, "source")[1]
+doc_tfidf <- dfm_tfidf[1, ]
+top_terms <- sort(as.vector(doc_tfidf), decreasing = TRUE)[1:10]
+top_names <- featnames(dfm_tfidf)[order(as.vector(doc_tfidf), 
+                                          decreasing = TRUE)[1:10]]
+                                          
+  
+result <- data.frame(terme = top_names, tfidf = round(top_terms, 3))
+print(result)
+
+
+# Fonction pour extraire les 10 premiers top termes TF-IDF pour chaque document
+for (i in 1:min(8, ndoc(dfm_tfidf))) {
+  doc_name <- docnames(dfm_tfidf)[i]
+  source_name <- docvars(dfm_tfidf, "source")[i]
+  
+  cat("\n--- Document:", doc_name, "(Source:", source_name, ") ---\n")
+  
+  # Extraire les valeurs TF-IDF pour ce document
+  doc_tfidf <- dfm_tfidf[i, ]
+  top_terms <- sort(as.vector(doc_tfidf), decreasing = TRUE)[1:10]
+  top_names <- featnames(dfm_tfidf)[order(as.vector(doc_tfidf), 
+                                          decreasing = TRUE)[1:10]]
+  
+  result <- data.frame(terme = top_names, tfidf = round(top_terms, 3))
+  print(result)
+}
+
+
+# ==============================================================================
+# 10. CONCORDANCE (Mots en contexte)
+# ==============================================================================
+
+# Rechercher un mot spécifique et voir son contexte dans chaque document
+mot_recherche <- "beurre"  # Changez ce mot
+
+# Concordancier pour le mot recherché
+kwic_result <- kwic(tokens_lemma, pattern = mot_recherche, window = 5)
+
+# Ajouter la source à chaque occurrence
+kwic_with_source <- data.frame(
+  source = docvars(corpus_txt, "source")[match(kwic_result$docname, docnames(corpus_txt))],
+  kwic_result
+)
+
+print(head(kwic_with_source, 10))
+
+# ==============================================================================
+# 11.ANALYSE DE RÉSEAU DES COOCCURRENCES
+# ==============================================================================
+
+
+# MÉTHODE facile : Matrice de cooccurrence avec quanteda (Feature co-occurrence)
+
+# Créer une matrice de cooccurrence : Matrice FCM (Feature Co-occurrence Matrix)
+# Fenêtre de 5 mots (ajustable) : interval pour mesurer la cooccurrence
+fcm_cooc <- fcm(tokens_lemma, context = "window", window = 5)
+
+
+# Réduire aux termes les plus fréquents pour une visualisation plus lisible (ici top 50)
+fcm_top <- fcm_select(fcm_cooc, pattern = names(topfeatures(dfm_dico, 50)))
+
+textplot_network(fcm_top, 
+                 min_freq = 0.8,
+                 edge_alpha = 0.5,
+                 edge_size = 2,
+                 edge_color = "steelblue",
+                 vertex_labelsize = 3)
+
+# MÉTHODE 2 : Réseau avec igraph et visualisation ggraph
+
+library(igraph)
+library(ggraph)
+library(tidygraph)
+
+# Convertir la FCM en matrice
+cooc_matrix <- as.matrix(fcm_top)
+
+# Créer un graphe à partir de la matrice
+graph_cooc <- graph_from_adjacency_matrix(cooc_matrix, 
+                                          mode = "undirected",
+                                          weighted = TRUE,
+                                          diag = FALSE)
+                                          
+
+ggraph(graph_cooc, layout = "fr") +  # Fruchterman-Reingold layout
+  geom_edge_link(aes(width = weight, alpha = weight), color = "gray70") +
+  geom_node_point(size = 5, color = "steelblue") +
+  geom_node_text(aes(label = name), size = 3, repel = TRUE) +
+  scale_edge_width(range = c(0.5, 3)) +
+  scale_edge_alpha(range = c(0.3, 0.8)) +
+  theme_void() +
+  labs(title = "Réseau de cooccurrences des termes",
+       subtitle = paste("Fenêtre de 5 mots -", vcount(graph_cooc), "termes"))
+
+
+seuil_cooc <- quantile(E(graph_cooc)$weight, 0.5)  # 50% des liens les plus forts
+graph_filtered <- delete_edges(graph_cooc, E(graph_cooc)[weight < seuil_cooc])
+
+# Calculer la centralité de degré
+V(graph_filtered)$degree <- degree(graph_filtered)
+
+# Calculer la centralité d'intermédiarité (betweenness)
+V(graph_filtered)$betweenness <- betweenness(graph_filtered)
+
+# Identifier les communautés
+communities <- cluster_louvain(graph_filtered)
+V(graph_filtered)$community <- membership(communities)
+
+#Nombre des communautés détectés
+max(V(graph_filtered)$community)
+
+set.seed(123)
+ggraph(graph_filtered, layout = "fr") +
+  geom_edge_link(aes(width = weight, alpha = weight), color = "gray70") +
+  geom_node_point(aes(size = degree, color = factor(community))) +
+  geom_node_text(aes(label = name), size = 3, repel = TRUE) +
+  scale_edge_width(range = c(0.5, 3)) +
+  scale_edge_alpha(range = c(0.3, 0.8)) +
+  scale_size(range = c(3, 10)) +
+  scale_color_brewer(palette = "Set2") +
+  theme_void() +
+  labs(title = "Réseau de cooccurrences avec communautés",
+       subtitle = paste(max(V(graph_filtered)$community), "communautés détectées"),
+       size = "Centralité",
+       color = "Communauté")
+       
+```
+
+## Passage au Topic Model !
+
+La première étape va être de choisir le nombre de topics !
+
+``` r
+# ===============================================================
+# 1. Encore et toujourjours chargement et préparation des données
+# ===============================================================
+
+# Nettoyer la DFM pour le topic modeling
+# Retirer les termes trop rares (< 2 documents) et trop fréquents (> 95%)
+dfm_clean <- dfm_trim(dfm_dico, 
+                      min_docfreq = 0.02,
+                      max_docfreq = 0.95,
+                      docfreq_type = "prop")
+
+# Retirer les documents vides
+dfm_clean <- dfm_subset(dfm_clean, ntoken(dfm_clean) > 0)
+
+# Convertir la DFM quanteda en DTM pour topicmodels
+dtm_for_lda <- quanteda::convert(dfm_clean, to = "topicmodels")
+# ou directement, cela marche aussi
+dtm <- quanteda::convert(dfm_clean, to = "tm")
+
+
+
+# ===============================================================
+# 2. DÉTERMINER LE NOMBRE OPTIMAL DE TOPICS
+## Attention cela peut prendre plusieurs minutes...
+# ===============================================================
+
+# Avec ldatuning 
+library(ldatuning)
+
+seq_topics <- seq(2, 12, by = 1) #je lui donne un intervalle pour rechercher pour gagner du temps
+
+result_tuning <- FindTopicsNumber(
+  dtm_for_lda,
+  topics = seq_topics,
+  metrics = c("Griffiths2004", "CaoJuan2009", "Arun2010", "Deveaud2014"),
+  method = "Gibbs",
+  control = list(seed = 123, iter = 1000),
+  mc.cores = 2,
+  verbose = TRUE
+)
+
+# Visualiser les métriques
+FindTopicsNumber_plot(result_tuning)
+
+#Résultats des métriques
+print(result_tuning)
+
+#Interprétation :
+# - Maximiser : Griffiths2004, Deveaud2014
+# - Minimiser : CaoJuan2009, Arun2010
+```
+
+## Passage au Topic Model ! 2
+
+Une fois le nombre de topic obtenu on va pouvoir lancer l'analyse :
+
+``` r
+# ==============================================================================
+# 3. CRÉER LE MODÈLE LDA AVEC topicmodels
+# ==============================================================================
+
+# Choisir le nombre optimal de topics 
+k_optimal <- 7  # A ajuster en fonction de FindTopicsNumber_plot
+
+# Création du modèle LDA avec k =7
+
+library(topicmodels)
+
+# Créer le modèle LDA
+lda_model <- LDA(dtm_for_lda, 
+                 k = k_optimal, 
+                 method = "Gibbs",
+                 control = list(seed = 123, 
+                                iter = 2000, 
+                                thin = 100,
+                                alpha = 0.1, #Alpha (α) : contrôle la diversité des thèmes par document (alpha faible = documents concentrés sur peu de thèmes)
+                                burnin = 500))
+                                
+```
+
+## Analyse et représentation de notre modèle
+
+``` r
+# ==============================================================================
+# 4. ANALYSER LES TOPICS : REGARDER PAR TOPIC
+# ==============================================================================
+
+
+# Extraire les termes les plus probables par topic
+top_terms <- topicmodels::terms(lda_model, 15)
+
+topicmodels::terms(lda_model, 15)
+
+# Autre représentation
+#Top 15 termes par topic 
+
+for (i in 1:k_optimal) {
+  cat("TOPIC", i, ":\n")
+  cat(paste(top_terms[, i], collapse = ", "), "\n\n")
+}
+
+# Visualisation : top termes par topic avec ggplot
+
+library (tidytext)
+
+tidy_lda <- tidy(lda_model, matrix = "beta")
+
+top_terms_plot <- tidy_lda %>%
+  group_by(topic) %>%
+  slice_max(beta, n = 10) %>%
+  ungroup() %>%
+  arrange(topic, -beta)
+
+ggplot(top_terms_plot, aes(x = reorder_within(term, beta, topic), 
+                           y = beta, fill = factor(topic))) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~ topic, scales = "free", ncol = 3) +
+  coord_flip() +
+  scale_x_reordered() +
+  labs(title = "Top 10 termes par topic",
+       x = "Termes", y = "Probabilité (β)") +
+  theme_minimal()
+
+
+## autre représentaion
+library(ggplot2)
+library(broom)
+library(wesanderson)
+
+#Top 10 des mots de chaque topic
+tidy_lda %>%
+  group_by(topic) %>%
+  top_n(10, beta) %>%
+  ungroup() %>%
+  arrange(topic, -beta) %>%
+  ggplot(aes(reorder(term, beta), beta, fill = factor(topic))) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~ topic, scales = "free") +
+  scale_fill_manual(values = wes_palette("BottleRocket1"))+ 
+  coord_flip() + 
+  labs(x = "Topic", 
+       y = "beta score", 
+       title = "Les 10 mots les plus fortement associés à chaque topic")
+
+
+topic1 = tidy_lda %>% filter(topic == 1)
+
+# nuage de mots avec le package wordcloud
+wordcloud::wordcloud(topic1$term, topic1$beta, scale=c(7,.5), min.freq=0.0001,max.words=300, rot.per=.1,
+    colors="black")
+
+# ==============================================================================
+# 5. ASSIGNER LES TOPICS AUX MOTS : ENTRER PAR LES MOTS
+# ==============================================================================
+lda_beta <- tidy(lda_model,matrix = "beta")
+lda_beta
+
+lda_beta %>% 
+  filter(term == "saucisse")
+
+
+lda_beta %>%  
+  filter(term == "saucisse") %>%
+  ggplot(aes(topic, beta, fill = factor(topic))) +
+  geom_col() +
+  scale_fill_manual(values = wes_palette("BottleRocket1"))  + #pour définir la palette de couleur
+  coord_flip() + 
+  labs(x = "Topic", 
+       y = "beta score", 
+       title = "Topic modeling du mot saucisse ") + 
+  theme_minimal()
+
+# regarder à quel topic le mot est assigné par documents
+assignments <- augment(lda_model, data = dtm_for_lda)
+assignments
+
+# ==============================================================================
+# 5. ASSIGNER LES TOPICS AUX DOCUMENTS (avec source)
+# ==============================================================================
+
+# Attribution des topics aux documents 
+
+# Extraire les probabilités gamma (document-topic)
+gamma_topics <- tidy(lda_model, matrix = "gamma")
+
+# ou 
+doc_topics <- topicmodels::posterior(lda_model)$topics
+
+# Trouver le topic dominant pour chaque document
+dominant_topic <- gamma_topics %>%
+  group_by(document) %>%
+  slice_max(gamma, n = 1) %>%
+  ungroup()
+
+# Regarder pour chaque texte la répartition des topics
+gamma_topics %>%
+  ggplot(aes(document, gamma, fill = factor(topic))) +
+  geom_col() +
+  scale_fill_manual(values = wes_palette("BottleRocket1")) +
+  coord_flip() + 
+  labs(x = "Corpus", 
+       y = "gamma score", 
+       title = "Topic modeling de 8 textes fondamentaux portant sur la Bretagne")
+       
+       # Une autre représentation
+gamma_topics %>%
+  mutate(title = reorder(document, gamma * topic)) %>%
+  ggplot(aes(factor(topic), gamma)) +
+  geom_boxplot() +
+  facet_wrap(~ title) +
+  labs(x = "topic", y = expression(gamma))
+
+# Analyser la répartition des topics pour un texte
+
+gamma_topics %>%  
+  filter(document == "galette_saucisse.txt") %>%
+  ggplot(aes(topic, gamma, fill = factor(topic))) +
+  geom_col() +
+  scale_fill_manual(values = wes_palette("BottleRocket1")) + 
+  coord_flip() + 
+  labs(x = "Topic", 
+       y = "gamma score", 
+       title = "Topic modeling du texte Galette-saucisse ") + 
+  theme_minimal()
+
+gamma_topics %>%  
+  filter(document == "pouldreuzic.txt") %>%
+  ggplot(aes(topic, gamma, fill = factor(topic))) +
+  geom_col() +
+  scale_fill_manual(values = wes_palette("BottleRocket1")) + 
+  coord_flip() + 
+  labs(x = "Topic", 
+       y = "gamma score", 
+       title = "Topic modeling du texte Pays Bigouden ") + 
+  theme_minimal()
+
+
+# Représentation globale des scores gamma
+gamma_topics %>%
+ggplot(aes(gamma)) + 
+  geom_histogram(bins = 100) + 
+  scale_y_log10() + 
+  labs(x = "Gamma score", 
+       y = "Count", 
+       title = "Score Gamma du topic Model sur les traditions bretonnes") + 
+  theme_minimal()
+  
+# Comment lire ce graphique ?
+# Lorsqu'un topic model offre un découpage bien tranché, les deux modes sont autour de 0 et de 1.
+# En effet, un document classé de manière nette dans 4 topics va afficher des scores gamma, par exemple, de 0.99 / 0.001 / 0.002 / 0.007.
+# Un document "mal classé" va plutôt afficher des scores de 0.30 / 0.20 / 0.25 / 0.25.
+
+
+# Récupérer les sources des documents
+doc_ids <- docnames(dfm_clean)
+sources <- docvars(dfm_clean, "source")
+
+# Créer un dataframe avec les résultats
+results_docs <- data.frame(
+  doc_id = doc_ids,
+  source = sources,
+  topic = dominant_topic$topic[match(doc_ids, dominant_topic$document)],
+  probability = dominant_topic$gamma[match(doc_ids, dominant_topic$document)]
+)
+
+# Distribution des documents par topic
+topic_distribution <- table(results_docs$topic)
+print(topic_distribution)
+
+# Visualisation de la distribution
+ggplot(results_docs, aes(x = factor(topic), fill = factor(topic))) +
+  geom_bar() +
+  labs(title = "Distribution des documents par topic",
+       x = "Topic", y = "Nombre de documents") +
+  theme_minimal() +
+  theme(legend.position = "none")
+  
+  # Documents représentatifs par topic
+cat("--- Documents les plus représentatifs par topic ---\n\n")
+for (i in 1:k_optimal) {
+  topic_docs <- results_docs %>% 
+    filter(topic == i) %>% 
+    arrange(desc(probability)) %>% 
+    head(3)
+  
+  cat("TOPIC", i, ":\n")
+  print(topic_docs[, c("source", "probability")])
+  cat("\n")
+}
+  
+  
+  # Heatmap des probabilités document-topic
+gamma_matrix <- lda_model@gamma
+rownames(gamma_matrix) <- doc_ids
+
+# Pour tous nos documents
+if (nrow(gamma_matrix) > 8) { #ici nos 8 documents
+  gamma_subset <- gamma_matrix[1:8, ]
+} else {
+  gamma_subset <- gamma_matrix
+}
+
+
+# Convertir en format long pour ggplot
+gamma_long <- reshape2::melt(gamma_subset)
+colnames(gamma_long) <- c("Document", "Topic", "Probability")
+
+ggplot(gamma_long, aes(x = Topic, y = Document, fill = Probability)) +
+  geom_tile() +
+  scale_fill_gradient(low = "white", high = "steelblue") +
+  labs(title = "Heatmap : Probabilité des topics par document",
+       x = "Topic", y = "Document") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(size = 8))
+
+
+
+
+# ==============================================================================
+# 6. EXPORT DES RÉSULTATS
+# ==============================================================================
+
+
+# Sauvegarder le modèle LDA
+saveRDS(lda_model, paste0("lda_model_k", k_optimal, ".rds"))
+
+# Exporter les termes par topic
+write.csv(top_terms, 
+          paste0("topics_top_terms_k", k_optimal, ".csv"), 
+          row.names = FALSE)
+
+# Exporter l'attribution des documents
+write.csv(results_docs, 
+          paste0("documents_topics_k", k_optimal, ".csv"), 
+          row.names = FALSE)
+
+# Exporter la matrice gamma (probabilités document-topic)
+gamma_df <- as.data.frame(lda_model@gamma)
+gamma_df$doc_id <- doc_ids
+gamma_df$source <- sources
+write.csv(gamma_df, 
+          paste0("gamma_matrix_k", k_optimal, ".csv"), 
+          row.names = FALSE)
+
+# Exporter les probabilités beta (terme-topic)
+beta_df <- tidy(lda_model, matrix = "beta")
+write.csv(beta_df, 
+          paste0("beta_matrix_k", k_optimal, ".csv"), 
+          row.names = FALSE)
+```
+
+## Analyse et représentation de notre modèle
+
+``` r
+ #==============================================================================
+  # 10. Autre visu et test distance, UMAP
+  # ==============================================================================
+
+library(LDAvis)
+library(FactoMineR)
+library(ape)
+library(dendextend)
+library(here)
+
+
+
+### Représentation intéractive avec LDAvis
+
+# Extraire les informations du modèle LDA
+phi <- posterior(lda_model)$terms  # Distribution des mots par topic (beta)
+theta <- posterior(lda_model)$topics  # Distribution des topics par document (gamma)
+vocab <- colnames(phi)
+doc_length <- rowSums(as.matrix(dtm_for_lda))  # Longueur de chaque document
+term_frequency <- colSums(as.matrix(dtm_for_lda))  # Fréquence de chaque terme
+
+# Créer un objet JSON pour LDAvis
+json_lda <- createJSON(
+  phi = phi, #phi : matrice terme-topic (probabilité de chaque mot dans chaque topic)
+  theta = theta, #theta : matrice document-topic (probabilité de chaque topic dans chaque document)
+  doc.length = doc_length, #doc.length : nombre de mots par document
+  vocab = vocab, #vocab : les mots (noms des colonnes du DTM)
+  term.frequency = term_frequency, #term.frequency : fréquence totale de chaque terme
+  R = 30  # Nombre de termes les plus pertinents à afficher
+)
+
+# Visualiser dans le navigateur
+serVis(json_lda, out.dir = "lda_vis", open.browser = TRUE)
+
+### Représenter la distance entre nos topics
+
+mytopicdist <- dist(doc_topics) %>% as.dist 
+
+hc_ward <- hclust(mytopicdist, method = "ward.D2")
+
+phylo_tree <- as.phylo(hc_ward)
+
+plot(phylo_tree, 
+     type = "fan",
+     cex = 0.6,
+     edge.color = "black",
+     edge.width = 1.5)
+
+
+
+
+# ici 4
+nb_clusters <- 4  # À ajuster selon le besoins
+
+# Couper l'arbre en K groupes
+groupes <- cutree(hc_ward, k = nb_clusters)
+
+# Créer une palette de couleurs
+couleurs <- rainbow(nb_clusters)
+couleurs_tips <- couleurs[groupes]
+
+# Nouveau plot avec couleurs
+par(mar = c(1, 1, 2, 1))
+plot(phylo_tree, 
+     type = "fan",
+     cex = 0.6,
+     tip.color = couleurs_tips,       # Couleurs par groupe
+     edge.color = "black",
+     edge.width = 1.5,
+     main = paste("Dendrogramme circulaire -", nb_clusters, "groupes"))
+
+
+plot(phylo_tree, 
+     type = "radial",
+     cex = 0.6,
+     node.pos = 2,
+     tip.color = couleurs_tips,       # Couleurs par groupe
+     edge.color = "black",
+     edge.width = 1.5,
+     main = paste("Dendrogramme circulaire -", nb_clusters, "groupes"))
+
+
+plot(phylo_tree, 
+     type = "unrooted",
+     cex = 0.6,
+     node.pos = 2,
+     tip.color = couleurs_tips,       # Couleurs par groupe
+     edge.color = "black",
+     edge.width = 1.5,
+     main = paste("Dendrogramme circulaire -", nb_clusters, "groupes"))
+
+library(umap)
+library(ggrepel)
+
+gamma_matrix <- lda_model@gamma
+rownames(gamma_matrix) <- docnames(dfm_clean)
+
+
+# Configurer UMAP
+umap_config <- umap.defaults
+umap_config$n_neighbors <- min(15, nrow(gamma_matrix) - 1)  # Ajuster selon nb documents
+umap_config$min_dist <- 0.1
+umap_config$n_components <- 2  # 2D pour visualisation
+umap_config$random_state <- 123
+
+# Calculer UMAP
+umap_result_docs <- umap(gamma_matrix, config = umap_config)
+
+# Créer un dataframe avec les résultats
+df_umap_docs <- data.frame(
+  doc_id = rownames(gamma_matrix),
+  source = docvars(dfm_clean, "source"),
+  umap1 = umap_result_docs$layout[, 1],
+  umap2 = umap_result_docs$layout[, 2],
+  dominant_topic = factor(results_docs$topic),
+  topic_prob = results_docs$probability
+)
+
+
+
+# VISUALISATION 1 : UMAP des documents colorés par topic dominant
+ggplot(df_umap_docs, aes(x = umap1, y = umap2, color = dominant_topic)) +
+  geom_point(aes(size = topic_prob), alpha = 0.7) +
+  geom_text(aes(label = doc_id), size = 2.5, hjust = 0, vjust = 0, 
+            nudge_x = 0.05, check_overlap = TRUE) +
+  scale_color_brewer(palette = "Set3") +
+  scale_size(range = c(3, 8)) +
+  theme_minimal() +
+  labs(title = "UMAP des documents basé sur leur distribution de topics",
+       subtitle = "Documents proches = distributions de topics similaires",
+       x = "UMAP 1", y = "UMAP 2",
+       color = "Topic dominant",
+       size = "Probabilité")
+
+
+# OPTION 2 : UMAP sur les topics (basé sur leur distribution de termes)
+
+
+# Extraire la matrice beta (topic-term probabilities)
+beta_matrix <- exp(lda_model@beta)  # Convertir log-prob en prob
+rownames(beta_matrix) <- paste0("Topic_", 1:k_optimal)
+colnames(beta_matrix) <- lda_model@terms
+
+
+
+# UMAP sur les topics
+umap_config_topics <- umap.defaults
+umap_config_topics$n_neighbors <- min(3, k_optimal - 1)  # Peu de topics
+umap_config_topics$min_dist <- 0.5
+umap_config_topics$n_components <- 2
+umap_config_topics$random_state <- 123
+
+
+umap_result_topics <- umap(beta_matrix, config = umap_config_topics)
+
+# Dataframe des topics
+df_umap_topics <- data.frame(
+  topic = 1:k_optimal,
+  umap1 = umap_result_topics$layout[, 1],
+  umap2 = umap_result_topics$layout[, 2]
+)
+
+# Ajouter les top 3 termes de chaque topic comme label
+top_terms_labels <- apply(topicmodels::terms(lda_model, 3), 2, paste, collapse = ", ")
+df_umap_topics$label <- top_terms_labels
+
+
+
+# VISUALISATION 3 : UMAP des topics
+ggplot(df_umap_topics, aes(x = umap1, y = umap2, label = paste0("T", topic))) +
+  geom_point(size = 10, color = "steelblue", alpha = 0.7) +
+  geom_text(size = 5, fontface = "bold", color = "white") +
+  geom_label(aes(label = label), size = 3, hjust = 0, vjust = 0,
+             nudge_x = 0.1, nudge_y = 0.1, alpha = 0.8) +
+  theme_minimal() +
+  labs(title = "UMAP des topics basé sur leur distribution de termes",
+       subtitle = "Topics proches = vocabulaire similaire",
+       x = "UMAP 1", y = "UMAP 2")
+
+```
+
