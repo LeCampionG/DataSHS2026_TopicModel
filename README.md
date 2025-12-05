@@ -49,6 +49,11 @@ library(ggrepel)
 Pour vérifier leur installation :
 
 ```r
+# Commande de base pour installer un package
+# install.packages("here")
+
+
+# Process pour vérifier l'installation des packages
 
 #  Packages nécessaires
 my_packages <- c("here", 
@@ -65,7 +70,8 @@ my_packages <- c("here",
                  "ldatuning", 
                  "topicmodels", 
                  "broom", 
-                 "wesanderson", 
+                 "wesanderson",
+                  "LDAvis",
                  "FactoMineR",
                   "ape",
                   "dendextend",
@@ -84,7 +90,7 @@ if(length(missing_packages)) install.packages(missing_packages,
 lapply(my_packages, library, character.only = TRUE)
 
 # Si difficultés possible de passer par les dépôts de github
- install.packages("devtools")
+ # install.packages("devtools")
 devtools::install_github("nikita-moor/ldatuning")
 
 ```
