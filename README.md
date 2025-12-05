@@ -1,8 +1,8 @@
 # DataSHS2026_TopicModel
 
-Ce dépôt contient le support de la présentation sur les topics models réalisée lors de la semaine data-shs sur Bordeaux le jeudi 11 décembre 2025 à Pessac, ainsi que les support pour le TP. (dépôt à venir)
+Ce dépôt contient le support de la présentation sur les topics models réalisée lors de la semaine data-shs sur Bordeaux le jeudi 11 décembre 2025 à Pessac, ainsi que les support pour le TP.
 
-Lien vers la présentation
+[Lien vers la présentation](https://lecampiong.github.io/DataSHS2026_TopicModel/#/title-slide)
 
 ## Pré-requis
 
