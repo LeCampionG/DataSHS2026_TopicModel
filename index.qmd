@@ -34,25 +34,25 @@ editor: visual
 
 ## C.N.I du topic modeling
 
-<p style="font-size:80%;margin-top:50px;">
+<p style="font-size:60%;margin-top:0px;">
 
 1- C'est une méthode qui appartient au champs de l'apprentissage non supervisé et au TAL (ou NLP en anglais).
 
 </p>
 
-<p style="font-size:80%;margin-top:50px;">
+<p style="font-size:60%;margin-top:10px;">
 
 2- Elle repose sur des modèles probabilistes et il existe plusieurs méthodes de topics modeling basées sur différents algorithmes.
 
 </p>
 
-<p style="font-size:80%;margin-top:50px;">
+<p style="font-size:60%;margin-top:10px;">
 
 3- C'est une approche complète qui repose sur plusieurs métrique et permet de nombreuses représentations.
 
 </p>
 
-<p style="font-size:80%;margin-top:50px;">
+<p style="font-size:60%;margin-top:10px;">
 
 4 - Méthode complètement différente de la méthode de classification proposée par Iramuteq... **MAIS** selon moi très complémentaire !
 
@@ -60,25 +60,27 @@ editor: visual
 
 ## L'idée à la base du Topic Modeling
 
-<p style="font-size:80%;margin-top:50px;">
+<p style="font-size:50%;margin-top:0px;">
 
 *1-* Un texte va être composé d'un ou de plusieurs topic ou thème. Un texte pourra alors être représenté par une combinaison de ces thèmes.
 
-<Br>
+
 
 *2-* Et chaque thème (ou topic) va donc être caractérisé par un ensemble de mots, il s'agit en fait de clusters de mots.
 
 </p>
 
-<p style="font-size:80%;margin-top:50px;">
+<p style="font-size:80%;margin-top:20px;">
+
+<Br>
 
 **Le postulat de base c'est donc que chaque document parle de plusieurs sujets (topics), et que chaque sujet correspond à un ensemble de mots qui apparaissent souvent ensemble.**
 
 </p>
 
-<p style="text-align: center; margin-top:50px; font-size: 110%;">
+<p style="text-align: center; margin-top:0px; font-size: 110%;">
 
-[**Tout l'enjeu du topic modeling va être de capturer cette intuition dans un cadre mathématique qui permet d'examiner un ensemble de documents et de découvrir, à partir des statistiques sur les mots, quels pourraient être les thèmes et quelle est la proportion de chaque thème dans chaque document.**]{style="color:#4178bc;"}
+[**Tout l'enjeu du topic modeling va être de capturer cette intuition dans un cadre mathématique**]{style="color:#4178bc;"}
 
 </p>
 
@@ -96,23 +98,10 @@ Petite chronologie de l'agorithme derrière le topic modeling :
 
 4- **Etc.**
 
-</p>
-
-<p style="font-size:80%;margin-top:50px;">
-
-Chacune de ces méthodes s'inspirant de la précédente et venant en corriger une limite.
-
-</p>
 
 ## Latent Dirichlet Allocation (LDA)
 
-<p style="font-size:80%;margin-top:50px;">
-
-**C'est donc une méthode qui est très utilisé et encore aujourd'hui la mieux implémenté dans R.**
-
-</p>
-
-<p style="font-size:80%;margin-top:50px;">
+<p style="font-size:80%;margin-top:0px;">
 
 LDA adopte une approche probabiliste, et repose donc sur les deux hypothèses du topic modeling pour rappel :
 
@@ -121,7 +110,7 @@ LDA adopte une approche probabiliste, et repose donc sur les deux hypothèses du
 
 </p>
 
-<p style="text-align: center; margin-top:50px; font-size: 110%;">
+<p style="text-align: center; margin-top:15px; font-size: 80%;">
 
 [**L'algorithme va donc chercher à estimer deux probabilités essentielles :**]{style="color:#4178bc;"}
 
@@ -145,7 +134,7 @@ L'algorithme va agir en 3 étape :
 
 </p>
 
-
+## Latent Dirichlet Allocation (LDA) III
 
 <p style="text-align: center; margin-top:50px; font-size: 60%;">
 
@@ -157,30 +146,27 @@ Pour réaliser cela LDA va proposer deux méthodes :
 
 </p>
 
+## Choisir le nombre de topics ?
 
-## Comment choisir le nombre de topics ?
-
-<p style="text-align: center; margin-top:50px; font-size: 80%;">
-
-**C'est le paramètre fondamental de notre analyse.**
+<p style="text-align: center; margin-top:0px; font-size: 80%;">
 
 > Un nombre trop faible et on obtient quelques thèmes très généraux, un trop grand nombre et on va obtenir des topics qui se chevauchent et/ou ininterprétable.
 
 </p>
 
-<p style="text-align: center; margin-top:50px; font-size: 80%;">
+<p style="text-align: center; margin-top:15px; font-size: 80%;">
 
 La solution recommandé est une **approche mixte alliant une démarche quantitative et qualitative**.
 
 </p>
 
-<p style="text-align: center; margin-top:50px; font-size: 80%;">
+<p style="text-align: center; margin-top:15px; font-size: 80%;">
 
 [**Point crucial : Les métriques quantitatives guident, mais l'interprétabilité humaine doit avoir le dernier mot. Un modèle avec d'excellentes métriques mais des topics incompréhensibles est inutile en pratique.**]{style="color:#4178bc;"}
 
 </p>
 
-## Comment choisir le nombre de topics ? II
+## Choisir le nombre de topics ? II
 
 <p style="text-align: center; margin-top:50px; font-size: 80%;">
 
@@ -233,6 +219,7 @@ Ou encore la méthode **BERTopic** qui intègre le contexte et le sens des mots,
 Pour accéder aux données et au dépôt : [**https://github.com/LeCampionG/DataSHS2026_TopicModel/tree/main**](https://github.com/LeCampionG/DataSHS2026_TopicModel/tree/main)
 
 </p>
+
 ::: r-stack
 <img src="figure/batman.webp" width="600" style="margin-top:15px;margin-bottom:0px"/>
 :::
@@ -264,7 +251,6 @@ Notre point de départ peut être :
 ## Chargement des données
 
 Si votre corpus texte a déjà fait l'objet d'une analyse par exemple via Iramuteq, il a donc déjà subit un certain nombre d'étape de préparation que nous allons voir maintenant, Dans ce cas vous pouvez vous rendre directement à la case DTM !
-
 
 ``` r
 # ==============================================================================
@@ -414,7 +400,6 @@ tokens_txt <- tokens_remove(tokens_txt, pattern = c(stop_proust, mot_supp_iramut
 
 # Optionnel : Ne garder que les mots de 2 caractères ou plus
 tokens_txt <- tokens_select(tokens_txt, min_nchar = 2)
-
 ```
 
 ## Lemmatiser
@@ -504,7 +489,6 @@ df_final_dico <- df_long_dico %>%
 
 # Renommer les colonnes en français
 colnames(df_final_dico) <- c("mot", "texte_source", "frequence", "categorie", "sujet")
-
 ```
 
 ## Un peu d'exploration
@@ -1284,6 +1268,4 @@ ggplot(df_umap_topics, aes(x = umap1, y = umap2, label = paste0("T", topic))) +
   labs(title = "UMAP des topics basé sur leur distribution de termes",
        subtitle = "Topics proches = vocabulaire similaire",
        x = "UMAP 1", y = "UMAP 2")
-
 ```
-

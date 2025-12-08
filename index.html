@@ -420,31 +420,31 @@ Initiation au Topic Modeling avec R<br>
 </section>
 <section id="c.n.i-du-topic-modeling" class="slide level2">
 <h2>C.N.I du topic modeling</h2>
-<p style="font-size:80%;margin-top:50px;">
+<p style="font-size:60%;margin-top:0px;">
 </p><p>1- C’est une méthode qui appartient au champs de l’apprentissage non supervisé et au TAL (ou NLP en anglais).</p>
 <p></p>
-<p style="font-size:80%;margin-top:50px;">
+<p style="font-size:60%;margin-top:10px;">
 </p><p>2- Elle repose sur des modèles probabilistes et il existe plusieurs méthodes de topics modeling basées sur différents algorithmes.</p>
 <p></p>
-<p style="font-size:80%;margin-top:50px;">
+<p style="font-size:60%;margin-top:10px;">
 </p><p>3- C’est une approche complète qui repose sur plusieurs métrique et permet de nombreuses représentations.</p>
 <p></p>
-<p style="font-size:80%;margin-top:50px;">
+<p style="font-size:60%;margin-top:10px;">
 </p><p>4 - Méthode complètement différente de la méthode de classification proposée par Iramuteq… <strong>MAIS</strong> selon moi très complémentaire !</p>
 <p></p>
 </section>
 <section id="lidée-à-la-base-du-topic-modeling" class="slide level2">
 <h2>L’idée à la base du Topic Modeling</h2>
-<p style="font-size:80%;margin-top:50px;">
+<p style="font-size:50%;margin-top:0px;">
 </p><p><em>1-</em> Un texte va être composé d’un ou de plusieurs topic ou thème. Un texte pourra alors être représenté par une combinaison de ces thèmes.</p>
-<p><br></p>
 <p><em>2-</em> Et chaque thème (ou topic) va donc être caractérisé par un ensemble de mots, il s’agit en fait de clusters de mots.</p>
 <p></p>
-<p style="font-size:80%;margin-top:50px;">
-</p><p><strong>Le postulat de base c’est donc que chaque document parle de plusieurs sujets (topics), et que chaque sujet correspond à un ensemble de mots qui apparaissent souvent ensemble.</strong></p>
+<p style="font-size:80%;margin-top:20px;">
+</p><p><br></p>
+<p><strong>Le postulat de base c’est donc que chaque document parle de plusieurs sujets (topics), et que chaque sujet correspond à un ensemble de mots qui apparaissent souvent ensemble.</strong></p>
 <p></p>
-<p style="text-align: center; margin-top:50px; font-size: 110%;">
-</p><p><span style="color:#4178bc;"><strong>Tout l’enjeu du topic modeling va être de capturer cette intuition dans un cadre mathématique qui permet d’examiner un ensemble de documents et de découvrir, à partir des statistiques sur les mots, quels pourraient être les thèmes et quelle est la proportion de chaque thème dans chaque document.</strong></span></p>
+<p style="text-align: center; margin-top:0px; font-size: 110%;">
+</p><p><span style="color:#4178bc;"><strong>Tout l’enjeu du topic modeling va être de capturer cette intuition dans un cadre mathématique</strong></span></p>
 <p></p>
 </section>
 <section id="sur-quoi-repose-le-topic-modeling" class="slide level2">
@@ -455,24 +455,17 @@ Initiation au Topic Modeling avec R<br>
 <p>2- Probabilistic latent semantic analysis (PLSA), développé par Thomas Hofmann et publiée en 1999.</p>
 <p>3- <strong>Latent Dirichlet Allocation (LDA)</strong> : La méthode de référence pendant de nombreuses années qui est encore utilisé aujourd’hui. Développé par <a href="http://www.jmlr.org/papers/volume3/blei03a/blei03a.pdf">Blei, Ng et Jordan</a>, publié en 2003.</p>
 <p>4- <strong>Etc.</strong></p>
-<p></p>
-<p style="font-size:80%;margin-top:50px;">
-</p><p>Chacune de ces méthodes s’inspirant de la précédente et venant en corriger une limite.</p>
-<p></p>
 </section>
 <section id="latent-dirichlet-allocation-lda" class="slide level2">
 <h2>Latent Dirichlet Allocation (LDA)</h2>
-<p style="font-size:80%;margin-top:50px;">
-</p><p><strong>C’est donc une méthode qui est très utilisé et encore aujourd’hui la mieux implémenté dans R.</strong></p>
-<p></p>
-<p style="font-size:80%;margin-top:50px;">
+<p style="font-size:80%;margin-top:0px;">
 </p><p>LDA adopte une approche probabiliste, et repose donc sur les deux hypothèses du topic modeling pour rappel :</p>
 <ul>
 <li>Chaque texte est un mélange de plusieurs topics</li>
 <li>Chaque topic est un mélange de mots avec certaines probabilités d’appartenance au topic.</li>
 </ul>
 <p></p>
-<p style="text-align: center; margin-top:50px; font-size: 110%;">
+<p style="text-align: center; margin-top:15px; font-size: 80%;">
 </p><p><span style="color:#4178bc;"><strong>L’algorithme va donc chercher à estimer deux probabilités essentielles :</strong></span></p>
 <p><span style="color:#4178bc;"><strong>- La distribution des topics pour chaque texte document.</strong></span></p>
 <p><span style="color:#4178bc;"><strong>- La distribution des mots pour chaque topic</strong></span></p>
@@ -486,29 +479,31 @@ Initiation au Topic Modeling avec R<br>
 <p>2- parcourt chaque document mot à mot, et met à jour les topics de chaque mot, par un calcul de probabilité.</p>
 <p>3- le processus d’assignation est répété de nombreuses fois jusqu’à stabilité du modèle.</p>
 <p></p>
+</section>
+<section id="latent-dirichlet-allocation-lda-iii" class="slide level2">
+<h2>Latent Dirichlet Allocation (LDA) III</h2>
 <p style="text-align: center; margin-top:50px; font-size: 60%;">
 </p><p>Pour réaliser cela LDA va proposer deux méthodes :</p>
 <p><em>Échantillonnage de Gibbs (Gibbs Sampling)</em> : méthode de Monte Carlo par chaînes de Markov qui échantillonne itérativement les assignations de sujets pour chaque mot. Cette méthode converge généralement mieux.</p>
 <p><em>Inférence variationnelle bayésienne (Variational Bayes)</em> : approche déterministe qui reformule l’inférence comme un problème d’optimisation. L’inférence variationnelle est souvent plus efficace que l’échantillonnage de Gibbs pour les grands corpus.</p>
 <p></p>
 </section>
-<section id="comment-choisir-le-nombre-de-topics" class="slide level2">
-<h2>Comment choisir le nombre de topics ?</h2>
-<p style="text-align: center; margin-top:50px; font-size: 80%;">
-</p><p><strong>C’est le paramètre fondamental de notre analyse.</strong></p>
-<blockquote>
+<section id="choisir-le-nombre-de-topics" class="slide level2">
+<h2>Choisir le nombre de topics ?</h2>
+<p style="text-align: center; margin-top:0px; font-size: 80%;">
+</p><blockquote>
 <p>Un nombre trop faible et on obtient quelques thèmes très généraux, un trop grand nombre et on va obtenir des topics qui se chevauchent et/ou ininterprétable.</p>
 </blockquote>
 <p></p>
-<p style="text-align: center; margin-top:50px; font-size: 80%;">
+<p style="text-align: center; margin-top:15px; font-size: 80%;">
 </p><p>La solution recommandé est une <strong>approche mixte alliant une démarche quantitative et qualitative</strong>.</p>
 <p></p>
-<p style="text-align: center; margin-top:50px; font-size: 80%;">
+<p style="text-align: center; margin-top:15px; font-size: 80%;">
 </p><p><span style="color:#4178bc;"><strong>Point crucial : Les métriques quantitatives guident, mais l’interprétabilité humaine doit avoir le dernier mot. Un modèle avec d’excellentes métriques mais des topics incompréhensibles est inutile en pratique.</strong></span></p>
 <p></p>
 </section>
-<section id="comment-choisir-le-nombre-de-topics-ii" class="slide level2">
-<h2>Comment choisir le nombre de topics ? II</h2>
+<section id="choisir-le-nombre-de-topics-ii" class="slide level2">
+<h2>Choisir le nombre de topics ? II</h2>
 <p style="text-align: center; margin-top:50px; font-size: 80%;">
 </p><p>1- Explorer un nombre adéquat de topics à l’aide du package <code>ldatunig</code> qui propose 4 métriques basées sur la littérature (Griffiths 2004, Cao 2009, Arun 2010, Deveaud 2014).</p>
 <p></p>
