@@ -43,46 +43,40 @@ editor: visual
 ::: {style="font-size: 0.8em;margin-top:10px;"}
 2- Elle repose sur des modèles probabilistes et il existe plusieurs méthodes de topics modeling basées sur différents algorithmes.
 :::
+
 </br>
 
 ::: {style="font-size: 0.8em;margin-top:10px;"}
-
 3- C'est une approche complète qui repose sur plusieurs métrique et permet de nombreuses représentations.
 :::
+
 </br>
 
 ::: {style="font-size: 0.8em;margin-top:10px;"}
-
 4 - Méthode complètement différente de la méthode de classification proposée par Iramuteq... **MAIS** selon moi très complémentaire !
 :::
 
 ## L'idée à la base du Topic Modeling
 
 ::: {style="font-size: 0.8em;margin-top:20px;"}
-
 *1-* Un texte va être composé d'un ou de plusieurs topic ou thème. Un texte pourra alors être représenté par une combinaison de ces thèmes.
 
-
 *2-* Et chaque thème (ou topic) va donc être caractérisé par un ensemble de mots, il s'agit en fait de clusters de mots.
-
 :::
 
 </br>
 
 ::: {style="font-size: 0.8em;margin-top:10px;"}
-
 **Le postulat de base c'est donc que chaque document parle de plusieurs sujets (topics), et que chaque sujet correspond à un ensemble de mots qui apparaissent souvent ensemble.**
 
 </br>
 
 [**Tout l'enjeu du topic modeling va être de capturer cette intuition dans un cadre mathématique**]{style="color:#4178bc;"}
-
 :::
 
 ## Sur quoi repose le topic modeling
 
 ::: {style="font-size: 0.8em;margin-top:10px;"}
-
 Petite chronologie de l'agorithme derrière le topic modeling :
 
 </br>
@@ -100,35 +94,28 @@ Petite chronologie de l'agorithme derrière le topic modeling :
 </br>
 
 4- **Etc.**
-
 :::
 
 ## Latent Dirichlet Allocation (LDA)
 
 ::: {style="font-size: 0.8em;margin-top:20px;"}
-
 LDA adopte une approche probabiliste, et repose donc sur les deux hypothèses du topic modeling pour rappel :
 
 -   Chaque texte est un mélange de plusieurs topics
 -   Chaque topic est un mélange de mots avec certaines probabilités d'appartenance au topic.
-
 :::
 
-
 ::: {style="font-size: 0.8em;margin-top:10px;"}
-
 [**L'algorithme va donc chercher à estimer deux probabilités essentielles :**]{style="color:#4178bc;"}
 
 [**- La distribution des topics pour chaque texte document.**]{style="color:#4178bc;"}
 
 [**- La distribution des mots pour chaque topic**]{style="color:#4178bc;"}
-
 :::
 
 ## Latent Dirichlet Allocation (LDA) II
 
 ::: {style="font-size: 0.8em;margin-top:20px;"}
-
 L'algorithme va agir en 3 étape :
 
 1- assigne aléatoirement à chaque mot un topic parmi un nombre K de topics qui aura été spécifié en amont.
@@ -140,13 +127,11 @@ L'algorithme va agir en 3 étape :
 </br>
 
 3- le processus d'assignation est répété de nombreuses fois jusqu'à stabilité du modèle.
-
 :::
 
 ## Latent Dirichlet Allocation (LDA) III
 
 ::: {style="font-size: 0.8em;margin-top:20px;"}
-
 Pour réaliser cela LDA va proposer deux méthodes :
 
 </br>
@@ -156,19 +141,15 @@ Pour réaliser cela LDA va proposer deux méthodes :
 </br>
 
 [*Inférence variationnelle bayésienne (Variational Bayes)*]{style="color:#4178bc;"} : approche déterministe qui reformule l'inférence comme un problème d'optimisation. L'inférence variationnelle est souvent plus efficace que l'échantillonnage de Gibbs pour les grands corpus.
-
 :::
 
 ## Choisir le nombre de topics ?
 
 ::: {style="font-size: 0.8em;margin-top:20px;"}
-
 > Un nombre trop faible et on obtient quelques thèmes très généraux, un trop grand nombre et on va obtenir des topics qui se chevauchent et/ou ininterprétable.
-
 :::
 
 </br>
-
 
 La solution recommandé est une **approche mixte alliant une démarche quantitative et qualitative**.
 
@@ -176,63 +157,46 @@ La solution recommandé est une **approche mixte alliant une démarche quantitat
 
 ::: {style="font-size: 0.8em;margin-top:10px;"}
 [**Point crucial : Les métriques quantitatives guident, mais l'interprétabilité humaine doit avoir le dernier mot. Un modèle avec d'excellentes métriques mais des topics incompréhensibles est inutile en pratique.**]{style="color:#4178bc;"}
-
 :::
 
 ## Choisir le nombre de topics ? II
 
 ::: {style="font-size: 0.8em;margin-top:10px;"}
-
 1- Etudier la perplexité et la cohérence des topic obtenus.
 
 > La perplexité mesure la capacité prédictive du modèle pour de nouveaux documents. Une perplexité faible indique une meilleure capacité de prédiction. Cependant, la perplexité ne capture pas la cohérence sémantique des sujets.
 
 > La cohérence mesure la qualité sémantique des sujets en comparant la similarité sémantique entre les mots les plus fréquents d'un sujet. Un score de cohérence élevé (proche de 1) indique que les mots d'un sujet sont sémantiquement liés. La cohérence reflète mieux l'interprétabilité humaine des sujets que la perplexité.
-
 :::
-
-
 
 ## Choisir le nombre de topics ? III
 
 ::: {style="font-size: 0.8em;margin-top:10px;"}
-
 2- Analyse qualitative des topics obtenus pour évaluer leur sens et leur interprétabilité.
-
 :::
-
 
 </br>
 
-
 ::: {style="font-size: 0.8em;margin-top:10px;"}
-
 3- Explorer un nombre adéquat de topics à l'aide du package `ldatunig` qui propose 4 métriques basées sur la littérature (Griffiths 2004, Cao 2009, Arun 2010, Deveaud 2014).
-
 :::
 
 ## Conclusion avec la théorie
 
 ::: {style="font-size: 0.8em;margin-top:30px;"}
-
 [Ce champs **continue d'évoluer et est très dynamique** !]{style="color:#4178bc;"}
-
 :::
 
-
 ::: {style="font-size: 0.8em;margin-top:20px;"}
-
 On peut toutefois citer :
 
-- le **correlated topics model** (CTM; Blei and Lafferty 2007) qui est une extension de la méthode LDA où les topics peuvent être corrélés.
+-   le **correlated topics model** (CTM; Blei and Lafferty 2007) qui est une extension de la méthode LDA où les topics peuvent être corrélés.
 
-- Ou encore la méthode **BERTopic** qui intègre le contexte et le sens des mots, méthode développé en 2022 par [Grootendorst](https://arxiv.org/abs/2203.05794) qui va aussi utilisé des méthodes non paramétrique de réduction de dimensions. Cette méthode est de plus en plus employée, très intéressantes et **tant à devenir la méthode de référence**.
-
+-   Ou encore la méthode **BERTopic** qui intègre le contexte et le sens des mots, méthode développé en 2022 par [Grootendorst](https://arxiv.org/abs/2203.05794) qui va aussi utilisé des méthodes non paramétrique de réduction de dimensions. Cette méthode est de plus en plus employée, très intéressantes et **tant à devenir la méthode de référence**.
 :::
 
 ::: {style="font-size: 0.6em;margin-top:20px;"}
 **... mais il faut aller sur Python**
-
 :::
 
 ## **Merci de votre attention et à vous de jouer !**
@@ -258,21 +222,18 @@ Pour accéder aux données et au dépôt : [**https://github.com/LeCampionG/Data
 ## Les données !
 
 ::: {style="font-size: 0.6em;margin-top:20px;"}
-
 Les données que nous allons travaillé aujourd'hui : un corpus textuel de qualité sur la Bretagne !
 
 En bref, le contenu brut de 8 pages wikipédia sur des fondamentaux de la région Bretagne!
-
 :::
-
 
 ::: r-stack
 <img src="figure/image.png" width="800" style="margin-top:15px;margin-bottom:0px"/>
 :::
 
 ## Chargement des données
-::: {style="font-size: 0.6em;margin-top:20px;"}
 
+::: {style="font-size: 0.6em;margin-top:20px;"}
 Si votre corpus texte a déjà fait l'objet d'une analyse par exemple via Iramuteq, il a donc déjà subit un certain nombre d'étape de préparation que nous allons voir maintenant, Dans ce cas vous pouvez vous rendre directement à la case DTM !
 :::
 
@@ -362,7 +323,6 @@ cat(substr(as.character(corpus_txt)[1], 1, 200), "...\n\n")
 
 ::: {style="font-size: 0.6em;margin-top:20px;"}
 <img src="figure/alert.png" width="30" style="margin-top:0px;margin-bottom:-7px;margin-right:8px;"/>[**C'est une étape importante de la préparation des données, qui nous permets de passer du corpus au "mot".**]{style="color:#4178bc;"}
-
 :::
 
 ``` r
@@ -432,11 +392,8 @@ tokens_txt <- tokens_select(tokens_txt, min_nchar = 2)
 ## Lemmatiser
 
 ::: {style="font-size: 0.6em;margin-top:20px;"}
-
 <img src="figure/alert.png" width="30" style="margin-top:0px;margin-bottom:-7px;margin-right:8px;"/>[**C'est une étape sensible et pas forcément nécessaire, à voir en fonction de vos besoins et hypothèses**]{style="color:#4178bc;"}
-
 :::
-
 
 ``` r
 #==============================================================================
