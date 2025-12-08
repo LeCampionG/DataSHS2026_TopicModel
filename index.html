@@ -420,121 +420,136 @@ Initiation au Topic Modeling avec R<br>
 </section>
 <section id="c.n.i-du-topic-modeling" class="slide level2">
 <h2>C.N.I du topic modeling</h2>
-<p style="font-size:60%;margin-top:0px;">
-</p><p>1- C’est une méthode qui appartient au champs de l’apprentissage non supervisé et au TAL (ou NLP en anglais).</p>
-<p></p>
-<p style="font-size:60%;margin-top:10px;">
-</p><p>2- Elle repose sur des modèles probabilistes et il existe plusieurs méthodes de topics modeling basées sur différents algorithmes.</p>
-<p></p>
-<p style="font-size:60%;margin-top:10px;">
-</p><p>3- C’est une approche complète qui repose sur plusieurs métrique et permet de nombreuses représentations.</p>
-<p></p>
-<p style="font-size:60%;margin-top:10px;">
-</p><p>4 - Méthode complètement différente de la méthode de classification proposée par Iramuteq… <strong>MAIS</strong> selon moi très complémentaire !</p>
-<p></p>
+<div style="font-size: 0.8em;margin-top:15px;">
+<p>1- C’est une méthode qui appartient au champs de l’apprentissage non supervisé et au TAL (ou NLP en anglais).</p>
+</div>
+<p><br></p>
+<div style="font-size: 0.8em;margin-top:10px;">
+<p>2- Elle repose sur des modèles probabilistes et il existe plusieurs méthodes de topics modeling basées sur différents algorithmes.</p>
+</div>
+<p><br></p>
+<div style="font-size: 0.8em;margin-top:10px;">
+<p>3- C’est une approche complète qui repose sur plusieurs métrique et permet de nombreuses représentations.</p>
+</div>
+<p><br></p>
+<div style="font-size: 0.8em;margin-top:10px;">
+<p>4 - Méthode complètement différente de la méthode de classification proposée par Iramuteq… <strong>MAIS</strong> selon moi très complémentaire !</p>
+</div>
 </section>
 <section id="lidée-à-la-base-du-topic-modeling" class="slide level2">
 <h2>L’idée à la base du Topic Modeling</h2>
-<p style="font-size:50%;margin-top:0px;">
-</p><p><em>1-</em> Un texte va être composé d’un ou de plusieurs topic ou thème. Un texte pourra alors être représenté par une combinaison de ces thèmes.</p>
+<div style="font-size: 0.8em;margin-top:20px;">
+<p><em>1-</em> Un texte va être composé d’un ou de plusieurs topic ou thème. Un texte pourra alors être représenté par une combinaison de ces thèmes.</p>
 <p><em>2-</em> Et chaque thème (ou topic) va donc être caractérisé par un ensemble de mots, il s’agit en fait de clusters de mots.</p>
-<p></p>
-<p style="font-size:80%;margin-top:20px;">
-</p><p><br></p>
+</div>
+<p><br></p>
+<div style="font-size: 0.8em;margin-top:10px;">
 <p><strong>Le postulat de base c’est donc que chaque document parle de plusieurs sujets (topics), et que chaque sujet correspond à un ensemble de mots qui apparaissent souvent ensemble.</strong></p>
-<p></p>
-<p style="text-align: center; margin-top:0px; font-size: 110%;">
-</p><p><span style="color:#4178bc;"><strong>Tout l’enjeu du topic modeling va être de capturer cette intuition dans un cadre mathématique</strong></span></p>
-<p></p>
+<p><br></p>
+<p><span style="color:#4178bc;"><strong>Tout l’enjeu du topic modeling va être de capturer cette intuition dans un cadre mathématique</strong></span></p>
+</div>
 </section>
 <section id="sur-quoi-repose-le-topic-modeling" class="slide level2">
 <h2>Sur quoi repose le topic modeling</h2>
-<p style="font-size:80%;margin-top:50px;">
-</p><p>Petite chronologie de l’agorithme derrière le topic modeling :</p>
+<div style="font-size: 0.8em;margin-top:10px;">
+<p>Petite chronologie de l’agorithme derrière le topic modeling :</p>
+<p><br></p>
 <p>1- Latent Semantic Analysis (LSA) dont la publication date de 1990.</p>
+<p><br></p>
 <p>2- Probabilistic latent semantic analysis (PLSA), développé par Thomas Hofmann et publiée en 1999.</p>
+<p><br></p>
 <p>3- <strong>Latent Dirichlet Allocation (LDA)</strong> : La méthode de référence pendant de nombreuses années qui est encore utilisé aujourd’hui. Développé par <a href="http://www.jmlr.org/papers/volume3/blei03a/blei03a.pdf">Blei, Ng et Jordan</a>, publié en 2003.</p>
+<p><br></p>
 <p>4- <strong>Etc.</strong></p>
+</div>
 </section>
 <section id="latent-dirichlet-allocation-lda" class="slide level2">
 <h2>Latent Dirichlet Allocation (LDA)</h2>
-<p style="font-size:80%;margin-top:0px;">
-</p><p>LDA adopte une approche probabiliste, et repose donc sur les deux hypothèses du topic modeling pour rappel :</p>
+<div style="font-size: 0.8em;margin-top:20px;">
+<p>LDA adopte une approche probabiliste, et repose donc sur les deux hypothèses du topic modeling pour rappel :</p>
 <ul>
 <li>Chaque texte est un mélange de plusieurs topics</li>
 <li>Chaque topic est un mélange de mots avec certaines probabilités d’appartenance au topic.</li>
 </ul>
-<p></p>
-<p style="text-align: center; margin-top:15px; font-size: 80%;">
-</p><p><span style="color:#4178bc;"><strong>L’algorithme va donc chercher à estimer deux probabilités essentielles :</strong></span></p>
+</div>
+<div style="font-size: 0.8em;margin-top:10px;">
+<p><span style="color:#4178bc;"><strong>L’algorithme va donc chercher à estimer deux probabilités essentielles :</strong></span></p>
 <p><span style="color:#4178bc;"><strong>- La distribution des topics pour chaque texte document.</strong></span></p>
 <p><span style="color:#4178bc;"><strong>- La distribution des mots pour chaque topic</strong></span></p>
-<p></p>
+</div>
 </section>
 <section id="latent-dirichlet-allocation-lda-ii" class="slide level2">
 <h2>Latent Dirichlet Allocation (LDA) II</h2>
-<p style="text-align: center; margin-top:50px; font-size: 80%;">
-</p><p>L’algorithme va agir en 3 étape :</p>
+<div style="font-size: 0.8em;margin-top:20px;">
+<p>L’algorithme va agir en 3 étape :</p>
 <p>1- assigne aléatoirement à chaque mot un topic parmi un nombre K de topics qui aura été spécifié en amont.</p>
+<p><br></p>
 <p>2- parcourt chaque document mot à mot, et met à jour les topics de chaque mot, par un calcul de probabilité.</p>
+<p><br></p>
 <p>3- le processus d’assignation est répété de nombreuses fois jusqu’à stabilité du modèle.</p>
-<p></p>
+</div>
 </section>
 <section id="latent-dirichlet-allocation-lda-iii" class="slide level2">
 <h2>Latent Dirichlet Allocation (LDA) III</h2>
-<p style="text-align: center; margin-top:50px; font-size: 60%;">
-</p><p>Pour réaliser cela LDA va proposer deux méthodes :</p>
-<p><em>Échantillonnage de Gibbs (Gibbs Sampling)</em> : méthode de Monte Carlo par chaînes de Markov qui échantillonne itérativement les assignations de sujets pour chaque mot. Cette méthode converge généralement mieux.</p>
-<p><em>Inférence variationnelle bayésienne (Variational Bayes)</em> : approche déterministe qui reformule l’inférence comme un problème d’optimisation. L’inférence variationnelle est souvent plus efficace que l’échantillonnage de Gibbs pour les grands corpus.</p>
-<p></p>
+<div style="font-size: 0.8em;margin-top:20px;">
+<p>Pour réaliser cela LDA va proposer deux méthodes :</p>
+<p><br></p>
+<p><span style="color:#4178bc;"><em>Échantillonnage de Gibbs (Gibbs Sampling)</em></span>: méthode de Monte Carlo par chaînes de Markov qui échantillonne itérativement les assignations de sujets pour chaque mot. Cette méthode converge généralement mieux.</p>
+<p><br></p>
+<p><span style="color:#4178bc;"><em>Inférence variationnelle bayésienne (Variational Bayes)</em></span> : approche déterministe qui reformule l’inférence comme un problème d’optimisation. L’inférence variationnelle est souvent plus efficace que l’échantillonnage de Gibbs pour les grands corpus.</p>
+</div>
 </section>
 <section id="choisir-le-nombre-de-topics" class="slide level2">
 <h2>Choisir le nombre de topics ?</h2>
-<p style="text-align: center; margin-top:0px; font-size: 80%;">
-</p><blockquote>
+<div style="font-size: 0.8em;margin-top:20px;">
+<blockquote>
 <p>Un nombre trop faible et on obtient quelques thèmes très généraux, un trop grand nombre et on va obtenir des topics qui se chevauchent et/ou ininterprétable.</p>
 </blockquote>
-<p></p>
-<p style="text-align: center; margin-top:15px; font-size: 80%;">
-</p><p>La solution recommandé est une <strong>approche mixte alliant une démarche quantitative et qualitative</strong>.</p>
-<p></p>
-<p style="text-align: center; margin-top:15px; font-size: 80%;">
-</p><p><span style="color:#4178bc;"><strong>Point crucial : Les métriques quantitatives guident, mais l’interprétabilité humaine doit avoir le dernier mot. Un modèle avec d’excellentes métriques mais des topics incompréhensibles est inutile en pratique.</strong></span></p>
-<p></p>
+</div>
+<p><br></p>
+<p>La solution recommandé est une <strong>approche mixte alliant une démarche quantitative et qualitative</strong>.</p>
+<p><br></p>
+<div style="font-size: 0.8em;margin-top:10px;">
+<p><span style="color:#4178bc;"><strong>Point crucial : Les métriques quantitatives guident, mais l’interprétabilité humaine doit avoir le dernier mot. Un modèle avec d’excellentes métriques mais des topics incompréhensibles est inutile en pratique.</strong></span></p>
+</div>
 </section>
 <section id="choisir-le-nombre-de-topics-ii" class="slide level2">
 <h2>Choisir le nombre de topics ? II</h2>
-<p style="text-align: center; margin-top:50px; font-size: 80%;">
-</p><p>1- Explorer un nombre adéquat de topics à l’aide du package <code>ldatunig</code> qui propose 4 métriques basées sur la littérature (Griffiths 2004, Cao 2009, Arun 2010, Deveaud 2014).</p>
-<p></p>
-<p style="text-align: center; margin-top:50px; font-size: 80%;">
-</p><p>2- Etudier la perplexité et la cohérence des topic obtenus.</p>
+<div style="font-size: 0.8em;margin-top:10px;">
+<p>1- Etudier la perplexité et la cohérence des topic obtenus.</p>
 <blockquote>
 <p>La perplexité mesure la capacité prédictive du modèle pour de nouveaux documents. Une perplexité faible indique une meilleure capacité de prédiction. Cependant, la perplexité ne capture pas la cohérence sémantique des sujets.</p>
 </blockquote>
 <blockquote>
 <p>La cohérence mesure la qualité sémantique des sujets en comparant la similarité sémantique entre les mots les plus fréquents d’un sujet. Un score de cohérence élevé (proche de 1) indique que les mots d’un sujet sont sémantiquement liés. La cohérence reflète mieux l’interprétabilité humaine des sujets que la perplexité.</p>
 </blockquote>
-<p></p>
-<p style="text-align: center; margin-top:50px; font-size: 80%;">
-</p><p>3- Analyse qualitative des topics obtenus pour évaluer leur sens et leur interprétabilité.</p>
-<p></p>
+</div>
+</section>
+<section id="choisir-le-nombre-de-topics-iii" class="slide level2">
+<h2>Choisir le nombre de topics ? III</h2>
+<div style="font-size: 0.8em;margin-top:10px;">
+<p>2- Analyse qualitative des topics obtenus pour évaluer leur sens et leur interprétabilité.</p>
+</div>
+<p><br></p>
+<div style="font-size: 0.8em;margin-top:10px;">
+<p>3- Explorer un nombre adéquat de topics à l’aide du package <code>ldatunig</code> qui propose 4 métriques basées sur la littérature (Griffiths 2004, Cao 2009, Arun 2010, Deveaud 2014).</p>
+</div>
 </section>
 <section id="conclusion-avec-la-théorie" class="slide level2">
 <h2>Conclusion avec la théorie</h2>
-<p style="text-align: center; margin-top:50px; font-size: 80%;">
-</p><p>Ce champs <strong>continue d’évoluer et est très dynamique</strong> !</p>
-<blockquote>
-<p>les dernières techniques publiées datent de <strong>2024 et 2025</strong>.</p>
-</blockquote>
-<blockquote>
-<p>Ces nouvelles méthodes sont très axées sur une intégration de modèle avec des réseaux de neurones ou encore de l’IA.</p>
-</blockquote>
-<p></p>
-<p style="text-align: center; margin-top:50px; font-size: 80%;">
-</p><p>On peut toutefois citer le <strong>correlated topics model</strong> (CTM; Blei and Lafferty 2007) qui est une extension de la méthode LDA où les topics peuvent être corrélés.</p>
-<p>Ou encore la méthode <strong>BERTopic</strong> qui intègre le contexte et le sens des mots, méthode développé en 2022 par <a href="https://arxiv.org/abs/2203.05794">Grootendorst</a> qui va aussi utilisé des méthodes non paramétrique de réduction de dimensions. Cette méthode est de plus en plus employée, très intéressantes et <strong>tant à devenir la méthode de référence</strong>.</p>
-<p></p>
+<div style="font-size: 0.8em;margin-top:30px;">
+<p><span style="color:#4178bc;">Ce champs <strong>continue d’évoluer et est très dynamique</strong> !</span></p>
+</div>
+<div style="font-size: 0.8em;margin-top:20px;">
+<p>On peut toutefois citer :</p>
+<ul>
+<li><p>le <strong>correlated topics model</strong> (CTM; Blei and Lafferty 2007) qui est une extension de la méthode LDA où les topics peuvent être corrélés.</p></li>
+<li><p>Ou encore la méthode <strong>BERTopic</strong> qui intègre le contexte et le sens des mots, méthode développé en 2022 par <a href="https://arxiv.org/abs/2203.05794">Grootendorst</a> qui va aussi utilisé des méthodes non paramétrique de réduction de dimensions. Cette méthode est de plus en plus employée, très intéressantes et <strong>tant à devenir la méthode de référence</strong>.</p></li>
+</ul>
+</div>
+<div style="font-size: 0.6em;margin-top:20px;">
+<p><strong>… mais il faut aller sur Python</strong></p>
+</div>
 </section>
 <section id="merci-de-votre-attention-et-à-vous-de-jouer" class="slide level2">
 <h2><strong>Merci de votre attention et à vous de jouer !</strong></h2>
@@ -551,19 +566,19 @@ Initiation au Topic Modeling avec R<br>
 </section>
 <section id="les-données" class="slide level2">
 <h2>Les données !</h2>
+<div style="font-size: 0.6em;margin-top:20px;">
 <p>Les données que nous allons travaillé aujourd’hui : un corpus textuel de qualité sur la Bretagne !</p>
 <p>En bref, le contenu brut de 8 pages wikipédia sur des fondamentaux de la région Bretagne!</p>
-<p>Notre point de départ peut être :</p>
-<p>1- Des fichiers TXT brutes dans un dossier (<strong>notre cas ici</strong>)</p>
-<p>2- Un fichier excel</p>
-<p>3- Ou encore un fichier avec des mots déjà lemmatisés sortie d’un autre logiciel</p>
+</div>
 <div class="r-stack">
 <p><img src="figure/image.png" width="800" style="margin-top:15px;margin-bottom:0px"></p>
 </div>
 </section>
 <section id="chargement-des-données" class="slide level2">
 <h2>Chargement des données</h2>
+<div style="font-size: 0.6em;margin-top:20px;">
 <p>Si votre corpus texte a déjà fait l’objet d’une analyse par exemple via Iramuteq, il a donc déjà subit un certain nombre d’étape de préparation que nous allons voir maintenant, Dans ce cas vous pouvez vous rendre directement à la case DTM !</p>
+</div>
 <div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="co"># ==============================================================================</span></span>
 <span id="cb1-2"><a href=""></a><span class="co"># 1. CHARGEMENT DES FICHIERS TXT AVEC MÉTADONNÉES</span></span>
 <span id="cb1-3"><a href=""></a><span class="co"># ==============================================================================</span></span>
@@ -644,7 +659,9 @@ Initiation au Topic Modeling avec R<br>
 </section>
 <section id="la-tokenisation" class="slide level2">
 <h2>La Tokenisation</h2>
+<div style="font-size: 0.6em;margin-top:20px;">
 <p><img src="figure/alert.png" width="30" style="margin-top:0px;margin-bottom:-7px;margin-right:8px;"><span style="color:#4178bc;"><strong>C’est une étape importante de la préparation des données, qui nous permets de passer du corpus au “mot”.</strong></span></p>
+</div>
 <div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a></span>
 <span id="cb3-2"><a href=""></a><span class="co"># ==============================================================================</span></span>
 <span id="cb3-3"><a href=""></a><span class="co"># 3. PRÉTRAITEMENT DU CORPUS</span></span>
@@ -709,7 +726,9 @@ Initiation au Topic Modeling avec R<br>
 </section>
 <section id="lemmatiser" class="slide level2">
 <h2>Lemmatiser</h2>
+<div style="font-size: 0.6em;margin-top:20px;">
 <p><img src="figure/alert.png" width="30" style="margin-top:0px;margin-bottom:-7px;margin-right:8px;"><span style="color:#4178bc;"><strong>C’est une étape sensible et pas forcément nécessaire, à voir en fonction de vos besoins et hypothèses</strong></span></p>
+</div>
 <div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a><span class="co">#==============================================================================</span></span>
 <span id="cb4-2"><a href=""></a><span class="co"># 3bis. LEMMATISATION EN FRANÇAIS</span></span>
 <span id="cb4-3"><a href=""></a><span class="co"># ==============================================================================</span></span>
