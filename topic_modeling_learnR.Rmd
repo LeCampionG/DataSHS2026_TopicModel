@@ -1229,15 +1229,6 @@ Pour accéder aux données et au dépôt : [**https://github.com/LeCampionG/Data
 
 **Diapositives libres** (CC BY-SA 4.0)
 
-### Ce que vous avez appris
-
-✅ Charger et préparer un corpus textuel  
-✅ Tokeniser et nettoyer  
-✅ Lemmatiser (optionnel)  
-✅ Créer et analyser une matrice DFM  
-✅ Optimiser le nombre de topics  
-✅ Construire et analyser un modèle LDA  
-✅ Créer des visualisations avancées  
 
 ### Pour aller plus loin
 
