@@ -1,248 +1,152 @@
 ---
-title: "Semaine Data SHS 2025"
-subtitle: <img src="figure/livre.webp" width="280" style="margin-bottom:0px;"/>
-author: "Initiation au Topic Modeling avec R<Br>"
-institute: |
-  Grégoire Le Campion - 11 décembre 2025<Br>
-format:
-  revealjs:
-    theme: dark
-    navigation-mode: vertical
-    transition: convex
-    css: styles.css
-    chalkboard: true
-    pointer:
-      pointerSize: 18
-embed-ressources: true
-lightbox: true
-editor: visual
+title: "Initiation au Topic Modeling avec R"
+author: "Grégoire Le Campion - 11 décembre 2025"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
 ---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(quanteda)
+library(quanteda.textplots)
+library(quanteda.textstats)
+library(readtext)
+library(here)
+library(tm)
+library(topicmodels)
+library(tidytext)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+library(igraph)
+library(ggraph)
+library(ldatuning)
+library(umap)
+library(ggrepel)
+library(ape)
+library(wesanderson)
+library(proustr)
+library(stringr)
+library(broom)
+library(wordcloud)
+
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+## Pour utiliser le LearnR
+
+Veiller avant de lancer les blocs de code d'avoir les packages suivant installer
+
+```{r eval=FALSE}
+# Installer tous les packages nécessaires
+install.packages(c(
+  "learnr", "quanteda", "quanteda.textplots", "quanteda.textstats",
+  "readtext", "here", "tm", "topicmodels", "tidytext",
+  "ggplot2", "dplyr", "tidyr", "reshape2", "igraph", "ggraph",
+  "ldatuning", "umap", "ggrepel", "ape", "wesanderson",
+  "proustr", "stringr", "broom", "wordcloud"
+))
+
+```
+
+Quand l'installation ne fonctionne pas depuis le cran, on peut aussi instalelr un package depuis son dépôt Github
+
+```{r eval=FALSE}
+# Installer depuis un dépôt github
+
+install.packages("devtools")
+
+devtools::install_github("cpsievert/LDAvis")
+
+```
+
 
 ## Objectif
 
-<p style="font-size:80%;margin-top:50px;">
-
 1- Une brève introduction théorique au Topic Model
-
-</p>
-
-<p style="font-size:80%;margin-top:50px;">
 
 2- Réaliser toute cette analyse et un peu plus avec R
 
-</p>
-
 ## C.N.I du topic modeling
 
-::: {style="font-size: 0.8em;margin-top:15px;"}
 1- C'est une méthode qui appartient au champs de l'apprentissage non supervisé et au TAL (ou NLP en anglais).
-:::
 
-</br>
-
-::: {style="font-size: 0.8em;margin-top:10px;"}
 2- Elle repose sur des modèles probabilistes et il existe plusieurs méthodes de topics modeling basées sur différents algorithmes.
-:::
 
-</br>
-
-::: {style="font-size: 0.8em;margin-top:10px;"}
 3- C'est une approche complète qui repose sur plusieurs métrique et permet de nombreuses représentations.
-:::
 
-</br>
-
-::: {style="font-size: 0.8em;margin-top:10px;"}
 4 - Méthode complètement différente de la méthode de classification proposée par Iramuteq... **MAIS** selon moi très complémentaire !
-:::
 
 ## L'idée à la base du Topic Modeling
 
-::: {style="font-size: 0.8em;margin-top:20px;"}
 *1-* Un texte va être composé d'un ou de plusieurs topic ou thème. Un texte pourra alors être représenté par une combinaison de ces thèmes.
 
 *2-* Et chaque thème (ou topic) va donc être caractérisé par un ensemble de mots, il s'agit en fait de clusters de mots.
-:::
 
-</br>
-
-::: {style="font-size: 0.8em;margin-top:10px;"}
 **Le postulat de base c'est donc que chaque document parle de plusieurs sujets (topics), et que chaque sujet correspond à un ensemble de mots qui apparaissent souvent ensemble.**
 
-</br>
-
-[**Tout l'enjeu du topic modeling va être de capturer cette intuition dans un cadre mathématique**]{style="color:#4178bc;"}
-:::
+**Tout l'enjeu du topic modeling va être de capturer cette intuition dans un cadre mathématique**
 
 ## Sur quoi repose le topic modeling
 
-::: {style="font-size: 0.8em;margin-top:10px;"}
-Petite chronologie de l'agorithme derrière le topic modeling :
-
-</br>
+Petite chronologie de l'algorithme derrière le topic modeling :
 
 1- Latent Semantic Analysis (LSA) dont la publication date de 1990.
 
-</br>
-
 2- Probabilistic latent semantic analysis (PLSA), développé par Thomas Hofmann et publiée en 1999.
 
-</br>
-
-3- **Latent Dirichlet Allocation (LDA)** : La méthode de référence pendant de nombreuses années qui est encore utilisé aujourd'hui. Développé par [Blei, Ng et Jordan](http://www.jmlr.org/papers/volume3/blei03a/blei03a.pdf), publié en 2003.
-
-</br>
+3- **Latent Dirichlet Allocation (LDA)** : La méthode de référence pendant de nombreuses années qui est encore utilisé aujourd'hui. Développé par Blei, Ng et Jordan, publié en 2003.
 
 4- **Etc.**
-:::
 
 ## Latent Dirichlet Allocation (LDA)
 
-::: {style="font-size: 0.8em;margin-top:20px;"}
 LDA adopte une approche probabiliste, et repose donc sur les deux hypothèses du topic modeling pour rappel :
 
--   Chaque texte est un mélange de plusieurs topics
--   Chaque topic est un mélange de mots avec certaines probabilités d'appartenance au topic.
-:::
+- Chaque texte est un mélange de plusieurs topics
+- Chaque topic est un mélange de mots avec certaines probabilités d'appartenance au topic.
 
-::: {style="font-size: 0.8em;margin-top:10px;"}
-[**L'algorithme va donc chercher à estimer deux probabilités essentielles :**]{style="color:#4178bc;"}
+**L'algorithme va donc chercher à estimer deux probabilités essentielles :**
 
-[**- La distribution des topics pour chaque texte document.**]{style="color:#4178bc;"}
+**- La distribution des topics pour chaque texte document.**
 
-[**- La distribution des mots pour chaque topic**]{style="color:#4178bc;"}
-:::
+**- La distribution des mots pour chaque topic**
 
 ## Latent Dirichlet Allocation (LDA) II
 
-::: {style="font-size: 0.8em;margin-top:20px;"}
 L'algorithme va agir en 3 étape :
 
 1- assigne aléatoirement à chaque mot un topic parmi un nombre K de topics qui aura été spécifié en amont.
 
-</br>
-
 2- parcourt chaque document mot à mot, et met à jour les topics de chaque mot, par un calcul de probabilité.
 
-</br>
-
 3- le processus d'assignation est répété de nombreuses fois jusqu'à stabilité du modèle.
-:::
-
-## Latent Dirichlet Allocation (LDA) III
-
-::: {style="font-size: 0.8em;margin-top:20px;"}
-Pour réaliser cela LDA va proposer deux méthodes :
-
-</br>
-
-[*Échantillonnage de Gibbs (Gibbs Sampling)*]{style="color:#4178bc;"}: méthode de Monte Carlo par chaînes de Markov qui échantillonne itérativement les assignations de sujets pour chaque mot. Cette méthode converge généralement mieux.
-
-</br>
-
-[*Inférence variationnelle bayésienne (Variational Bayes)*]{style="color:#4178bc;"} : approche déterministe qui reformule l'inférence comme un problème d'optimisation. L'inférence variationnelle est souvent plus efficace que l'échantillonnage de Gibbs pour les grands corpus.
-:::
 
 ## Choisir le nombre de topics ?
 
-::: {style="font-size: 0.8em;margin-top:20px;"}
 > Un nombre trop faible et on obtient quelques thèmes très généraux, un trop grand nombre et on va obtenir des topics qui se chevauchent et/ou ininterprétable.
-:::
-
-</br>
 
 La solution recommandé est une **approche mixte alliant une démarche quantitative et qualitative**.
 
-</br>
-
-::: {style="font-size: 0.8em;margin-top:10px;"}
-[**Point crucial : Les métriques quantitatives guident, mais l'interprétabilité humaine doit avoir le dernier mot. Un modèle avec d'excellentes métriques mais des topics incompréhensibles est inutile en pratique.**]{style="color:#4178bc;"}
-:::
-
-## Choisir le nombre de topics ? II
-
-::: {style="font-size: 0.8em;margin-top:10px;"}
-1- Etudier la perplexité et la cohérence des topic obtenus.
-
-> La perplexité mesure la capacité prédictive du modèle pour de nouveaux documents. Une perplexité faible indique une meilleure capacité de prédiction. Cependant, la perplexité ne capture pas la cohérence sémantique des sujets.
-
-> La cohérence mesure la qualité sémantique des sujets en comparant la similarité sémantique entre les mots les plus fréquents d'un sujet. Un score de cohérence élevé (proche de 1) indique que les mots d'un sujet sont sémantiquement liés. La cohérence reflète mieux l'interprétabilité humaine des sujets que la perplexité.
-:::
-
-## Choisir le nombre de topics ? III
-
-::: {style="font-size: 0.8em;margin-top:10px;"}
-2- Analyse qualitative des topics obtenus pour évaluer leur sens et leur interprétabilité.
-:::
-
-</br>
-
-::: {style="font-size: 0.8em;margin-top:10px;"}
-3- Explorer un nombre adéquat de topics à l'aide du package `ldatunig` qui propose 4 métriques basées sur la littérature (Griffiths 2004, Cao 2009, Arun 2010, Deveaud 2014).
-:::
-
-## Conclusion avec la théorie
-
-::: {style="font-size: 0.8em;margin-top:30px;"}
-[Ce champs **continue d'évoluer et est très dynamique** !]{style="color:#4178bc;"}
-:::
-
-::: {style="font-size: 0.8em;margin-top:20px;"}
-On peut toutefois citer :
-
--   le **correlated topics model** (CTM; Blei and Lafferty 2007) qui est une extension de la méthode LDA où les topics peuvent être corrélés.
-
--   Ou encore la méthode **BERTopic** qui intègre le contexte et le sens des mots, méthode développé en 2022 par [Grootendorst](https://arxiv.org/abs/2203.05794) qui va aussi utilisé des méthodes non paramétrique de réduction de dimensions. Cette méthode est de plus en plus employée, très intéressantes et **tant à devenir la méthode de référence**.
-:::
-
-::: {style="font-size: 0.6em;margin-top:20px;"}
-**... mais il faut aller sur Python**
-:::
-
-## **Merci de votre attention et à vous de jouer !**
-
-</h2>
-
-<p class="small" style="text-align: center;">
-
-Pour accéder aux données et au dépôt : [**https://github.com/LeCampionG/DataSHS2026_TopicModel/tree/main**](https://github.com/LeCampionG/DataSHS2026_TopicModel/tree/main)
-
-</p>
-
-::: r-stack
-<img src="figure/batman.webp" width="600" style="margin-top:15px;margin-bottom:0px"/>
-:::
-
-<br> <br>
-
-**Contact** : [gregoire.lecampion\@cnrs.fr](mailto:gregoire.lecampion@cnrs.fr){.email} <br>**Diapositives libres** (CC BY-SA 4.0)
-
-</p>
-
-## Les données !
-
-::: {style="font-size: 0.6em;margin-top:20px;"}
-Les données que nous allons travaillé aujourd'hui : un corpus textuel de qualité sur la Bretagne !
-
-En bref, le contenu brut de 8 pages wikipédia sur des fondamentaux de la région Bretagne!
-:::
-
-::: r-stack
-<img src="figure/image.png" width="800" style="margin-top:15px;margin-bottom:0px"/>
-:::
+**Point crucial : Les métriques quantitatives guident, mais l'interprétabilité humaine doit avoir le dernier mot. Un modèle avec d'excellentes métriques mais des topics incompréhensibles est inutile en pratique.**
 
 ## Chargement des données
 
-::: {style="font-size: 0.6em;margin-top:20px;"}
-Si votre corpus texte a déjà fait l'objet d'une analyse par exemple via Iramuteq, il a donc déjà subit un certain nombre d'étape de préparation que nous allons voir maintenant, Dans ce cas vous pouvez vous rendre directement à la case DTM !
-:::
+```{r chargement, exercise=TRUE, exercise.lines=40}
 
-``` r
 # ==============================================================================
 # 1. CHARGEMENT DES FICHIERS TXT AVEC MÉTADONNÉES
 # ==============================================================================
 
- library(here)
+library(here)
+library(readtext)
+library(stringr)
+library(dplyr)
+
 
  # Définir le répertoire contenant vos fichiers txt
  
@@ -284,11 +188,19 @@ metadata <- read.csv2(csv_path)
 library(dplyr)
 
 data_txt <- left_join(data_txt, metadata, by = "doc_id")
+
+```
+
+```{r chargement-solution}
+# Ce code charge vos fichiers texte avec leurs métadonnées
+# Assurez-vous que :
+# - Le dossier "fichier_txt" existe
+# - Le fichier "metadata/metadata.csv" existe si vous l'utilisez
 ```
 
 ## Création du corpus
 
-``` r
+```{r corpus, exercise=TRUE, exercise.setup="chargement", exercise.lines=30}
 # ==============================================================================
 # 2. CRÉATION DU CORPUS QUANTEDA
 # ==============================================================================
@@ -301,32 +213,28 @@ corpus_txt <- corpus(data_txt,
                      docid_field = "doc_id")
 
 # Afficher un résumé du corpus
-
 summary(corpus_txt, n = 8)
 
 # Visualiser les métadonnées (docvars)
-
 print(head(docvars(corpus_txt)))
 
 # Si vous voulez faire des filtres à l'aide des métadonnées
-corpus_gastro <- corpus_subset(corpus_txt, sujet == "gastronomie")
-corpus_cat_1 <- corpus_subset(corpus_txt, cat == 1)
+# corpus_gastro <- corpus_subset(corpus_txt, sujet == "gastronomie")
+# corpus_cat_1 <- corpus_subset(corpus_txt, cat == 1)
 
 # Grouper par métadonnées
-corpus_cat <- corpus_group(corpus_txt, groups = cat)
+# corpus_cat <- corpus_group(corpus_txt, groups = cat)
 
 #Si vous souhaitez visualiser les 200 premiers charactères du 1er texte
 cat(substr(as.character(corpus_txt)[1], 1, 200), "...\n\n")
+
 ```
 
 ## La Tokenisation
 
-::: {style="font-size: 0.6em;margin-top:20px;"}
-<img src="figure/alert.png" width="30" style="margin-top:0px;margin-bottom:-7px;margin-right:8px;"/>[**C'est une étape importante de la préparation des données, qui nous permets de passer du corpus au "mot".**]{style="color:#4178bc;"}
-:::
+**C'est une étape importante de la préparation des données, qui nous permets de passer du corpus au "mot".**
 
-``` r
-
+```{r tokenisation, exercise=TRUE, exercise.setup="corpus", exercise.lines=70}
 # ==============================================================================
 # 3. PRÉTRAITEMENT DU CORPUS
 # ==============================================================================
@@ -387,15 +295,19 @@ tokens_txt <- tokens_remove(tokens_txt, pattern = c(stop_proust, mot_supp_iramut
 
 # Optionnel : Ne garder que les mots de 2 caractères ou plus
 tokens_txt <- tokens_select(tokens_txt, min_nchar = 2)
+
+# Afficher un aperçu
+print(head(tokens_txt, 3))
+
 ```
 
 ## Lemmatiser
 
-::: {style="font-size: 0.6em;margin-top:20px;"}
-<img src="figure/alert.png" width="30" style="margin-top:0px;margin-bottom:-7px;margin-right:8px;"/>[**C'est une étape sensible et pas forcément nécessaire, à voir en fonction de vos besoins et hypothèses**]{style="color:#4178bc;"}
-:::
+**C'est une étape sensible et pas forcément nécessaire, à voir en fonction de vos besoins et hypothèses**
 
-``` r
+**Note:** Si vous n'avez pas le dictionnaire de lemmatisation, vous pouvez sauter cette étape et utiliser `tokens_txt` directement.
+
+```{r lemmatisation, exercise=TRUE, exercise.setup="tokenisation", exercise.lines=25}
 #==============================================================================
 # 3bis. LEMMATISATION EN FRANÇAIS
 # ==============================================================================
@@ -418,11 +330,13 @@ lemma_dict <- read.csv(dico_path) # format: nom,lemme
                                 pattern = lemma_dict$nom,
                                 replacement = lemma_dict$lemme)
                                 
+
+print(head(tokens_lemma, 3))
 ```
 
 ## Création du DFM
 
-``` r
+```{r dfm, exercise=TRUE, exercise.setup="lemmatisation", exercise.lines=30}
 # ==============================================================================
 # 4. CRÉATION DE LA MATRICE DOCUMENT-FEATURE (DFM)
 # ==============================================================================
@@ -453,7 +367,9 @@ cat("Sparsité:", round(sparsity(dfm_dico) * 100, 2), "%\n\n")
 
 dfm_reduit <- dfm_trim(dfm_dico, min_docfreq = 2)
 cat("Après réduction - Sparsité:", round(sparsity(dfm_dico) * 100, 2), "%\n\n")
+```
 
+```{r dfm2, exercise=TRUE, exercise.setup="lemmatisation", exercise.lines=30}
 
 ################ Transformer le DFM en un dataframe source mot frequence
 
@@ -485,8 +401,7 @@ head(df_final_dico)
 
 ## Un peu d'exploration
 
-``` r
-
+```{r exploration, exercise=TRUE, exercise.setup="dfm", exercise.lines=30}
 # ==============================================================================
 # 5. ANALYSES BASIQUES AVEC CONSERVATION DE L'ORIGINE
 # ==============================================================================
@@ -525,6 +440,10 @@ textplot_wordcloud(dfm_dico,
                    min_count = 5, 
                    max_words = 100, comparison = TRUE)
 
+```
+
+```{r exploration2, exercise=TRUE, exercise.setup="dfm", exercise.lines=20}
+
 # ==============================================================================
 # 6. ANALYSE PAR SOURCE/DOCUMENT
 # ==============================================================================
@@ -551,6 +470,9 @@ ggplot(stats_docs, aes(x = reorder(doc_id, n_tokens), y = n_tokens)) +
        x = "Document (source)", y = "Nombre de tokens") +
   theme_minimal()
 
+```
+
+```{r exploration3, exercise=TRUE, exercise.setup="dfm", exercise.lines=15}
 # ==============================================================================
 # 7. GROUPER PAR MÉTADONNÉES 
 # ==============================================================================
@@ -562,7 +484,9 @@ ggplot(stats_docs, aes(x = reorder(doc_id, n_tokens), y = n_tokens)) +
 # # Comparer les termes les plus fréquents par groupe
  freq_by_group <- textstat_frequency(dfm_grouped, groups = docvars(dfm_grouped, "sujet"))
  print(head(freq_by_group, 30))
-
+```
+ 
+```{r exploration4, exercise=TRUE, exercise.setup="dfm", exercise.lines=20}
 # ==============================================================================
 # 8. ANALYSE DE SIMILARITÉ ENTRE DOCUMENTS
 # ==============================================================================
@@ -584,6 +508,10 @@ simil_df <- as.matrix(simil_matrix)
 # Afficher les 5 premières lignes/colonnes
 print(simil_df[1:min(5, nrow(simil_df)), 1:min(5, ncol(simil_df))])
 
+```
+
+
+```{r exploration5, exercise=TRUE, exercise.setup="dfm", exercise.lines=20}
 # ==============================================================================
 # 9. EXTRACTION DE TERMES CLÉS PAR DOCUMENT : TF-IDF
 # ==============================================================================
@@ -621,7 +549,9 @@ for (i in 1:min(8, ndoc(dfm_tfidf))) {
   result <- data.frame(terme = top_names, tfidf = round(top_terms, 3))
   print(result)
 }
+```
 
+```{r exploration6, exercise=TRUE, exercise.setup="dfm", exercise.lines=20}
 
 # ==============================================================================
 # 10. CONCORDANCE (Mots en contexte)
@@ -640,6 +570,9 @@ kwic_with_source <- data.frame(
 )
 
 print(head(kwic_with_source, 10))
+```
+
+```{r exploration7, exercise=TRUE, exercise.setup="dfm", exercise.lines=20}
 
 # ==============================================================================
 # 11.ANALYSE DE RÉSEAU DES COOCCURRENCES
@@ -663,11 +596,25 @@ textplot_network(fcm_top,
                  edge_color = "steelblue",
                  vertex_labelsize = 3)
 
+```
+
+```{r exploration8, exercise=TRUE, exercise.setup="dfm", exercise.lines=60}
+
+# ==============================================================================
+# 11bis.ANALYSE DE RÉSEAU DES COOCCURRENCES
+# ==============================================================================
+
 # MÉTHODE 2 : Réseau avec igraph et visualisation ggraph
 
 library(igraph)
 library(ggraph)
 library(tidygraph)
+
+
+# Fenêtre de 5 mots (ajustable) : interval pour mesurer la cooccurrence
+fcm_cooc <- fcm(tokens_lemma, context = "window", window = 5)
+
+fcm_top <- fcm_select(fcm_cooc, pattern = names(topfeatures(dfm_dico, 50)))
 
 # Convertir la FCM en matrice
 cooc_matrix <- as.matrix(fcm_top)
@@ -693,8 +640,9 @@ ggraph(graph_cooc, layout = "fr") +  # Fruchterman-Reingold layout
 seuil_cooc <- quantile(E(graph_cooc)$weight, 0.5)  # 50% des liens les plus forts
 graph_filtered <- delete_edges(graph_cooc, E(graph_cooc)[weight < seuil_cooc])
 
-# Calculer la centralité de degré
-V(graph_filtered)$degree <- degree(graph_filtered)
+
+# Calculer le degré (c'était déjà fait avant normalement)
+V(graph_filtered)$degree <- igraph::degree(graph_filtered)
 
 # Calculer la centralité d'intermédiarité (betweenness)
 V(graph_filtered)$betweenness <- betweenness(graph_filtered)
@@ -720,16 +668,18 @@ ggraph(graph_filtered, layout = "fr") +
        subtitle = paste(max(V(graph_filtered)$community), "communautés détectées"),
        size = "Centralité",
        color = "Communauté")
-       
+
 ```
 
-## Passage au Topic Model !
+## Préparation pour le Topic Modeling
 
-La première étape va être de choisir le nombre de topics !
-
-``` r
+```{r preparation-lda, exercise=TRUE, exercise.setup="dfm", exercise.lines=30}
 # ===============================================================
-# 1. Encore et toujourjours chargement et préparation des données
+# PRÉPARATION DES DONNÉES POUR LE TOPIC MODELING
+# ===============================================================
+
+# ===============================================================
+# 1. Encore et toujours chargement et préparation des données
 # ===============================================================
 
 # Nettoyer la DFM pour le topic modeling
@@ -746,12 +696,15 @@ dfm_clean <- dfm_subset(dfm_clean, ntoken(dfm_clean) > 0)
 dtm_for_lda <- quanteda::convert(dfm_clean, to = "topicmodels")
 # ou directement, cela marche aussi
 dtm <- quanteda::convert(dfm_clean, to = "tm")
+```
 
+## Optimisation du nombre de topics
 
+**Attention : Cette étape peut prendre plusieurs minutes...**
 
+```{r optimization, exercise=TRUE, exercise.setup="preparation-lda", exercise.lines=20, exercise.eval=FALSE}
 # ===============================================================
 # 2. DÉTERMINER LE NOMBRE OPTIMAL DE TOPICS
-## Attention cela peut prendre plusieurs minutes...
 # ===============================================================
 
 # Avec ldatuning 
@@ -780,11 +733,10 @@ print(result_tuning)
 # - Minimiser : CaoJuan2009, Arun2010
 ```
 
-## Passage au Topic Model ! 2
+## Création du modèle LDA
 
-Une fois le nombre de topic obtenu on va pouvoir lancer l'analyse :
+```{r lda-model, exercise=TRUE, exercise.setup="preparation-lda", exercise.lines=25}
 
-``` r
 # ==============================================================================
 # 3. CRÉER LE MODÈLE LDA AVEC topicmodels
 # ==============================================================================
@@ -805,12 +757,12 @@ lda_model <- LDA(dtm_for_lda,
                                 thin = 100,
                                 alpha = 0.1, #Alpha (α) : contrôle la diversité des thèmes par document (alpha faible = documents concentrés sur peu de thèmes)
                                 burnin = 500))
-                                
 ```
 
-## Analyse et représentation de notre modèle
+## Analyse des topics
 
-``` r
+```{r analyse-topics, exercise=TRUE, exercise.setup="lda-model", exercise.lines=40}
+
 # ==============================================================================
 # 4. ANALYSER LES TOPICS : REGARDER PAR TOPIC
 # ==============================================================================
@@ -850,12 +802,17 @@ ggplot(top_terms_plot, aes(x = reorder_within(term, beta, topic),
   labs(title = "Top 10 termes par topic",
        x = "Termes", y = "Probabilité (β)") +
   theme_minimal()
+```
 
+```{r doc-topics, exercise=TRUE, exercise.setup="lda-model", exercise.lines=15}
 
 ## autre représentaion
+
 library(ggplot2)
 library(broom)
 library(wesanderson)
+
+tidy_lda <- tidy(lda_model, matrix = "beta")
 
 #Top 10 des mots de chaque topic
 tidy_lda %>%
@@ -878,6 +835,10 @@ topic1 = tidy_lda %>% filter(topic == 1)
 # nuage de mots avec le package wordcloud
 wordcloud::wordcloud(topic1$term, topic1$beta, scale=c(7,.5), min.freq=0.0001,max.words=300, rot.per=.1,
     colors="black")
+```
+
+
+```{r doc-topics2, exercise=TRUE, exercise.setup="lda-model", exercise.lines=10}
 
 # ==============================================================================
 # 5. ASSIGNER LES TOPICS AUX MOTS : ENTRER PAR LES MOTS
@@ -904,6 +865,12 @@ lda_beta %>%
 assignments <- augment(lda_model, data = dtm_for_lda)
 assignments
 
+
+```
+
+## Attribution des documents aux topics
+
+```{r doc-topics3, exercise=TRUE, exercise.setup="lda-model", exercise.lines=80}
 # ==============================================================================
 # 5. ASSIGNER LES TOPICS AUX DOCUMENTS (avec source)
 # ==============================================================================
@@ -1043,48 +1010,14 @@ ggplot(gamma_long, aes(x = Topic, y = Document, fill = Probability)) +
   theme_minimal() +
   theme(axis.text.y = element_text(size = 8))
 
-
-
-
-# ==============================================================================
-# 6. EXPORT DES RÉSULTATS
-# ==============================================================================
-
-
-# Sauvegarder le modèle LDA
-saveRDS(lda_model, paste0("lda_model_k", k_optimal, ".rds"))
-
-# Exporter les termes par topic
-write.csv(top_terms, 
-          paste0("topics_top_terms_k", k_optimal, ".csv"), 
-          row.names = FALSE)
-
-# Exporter l'attribution des documents
-write.csv(results_docs, 
-          paste0("documents_topics_k", k_optimal, ".csv"), 
-          row.names = FALSE)
-
-# Exporter la matrice gamma (probabilités document-topic)
-gamma_df <- as.data.frame(lda_model@gamma)
-gamma_df$doc_id <- doc_ids
-gamma_df$source <- sources
-write.csv(gamma_df, 
-          paste0("gamma_matrix_k", k_optimal, ".csv"), 
-          row.names = FALSE)
-
-# Exporter les probabilités beta (terme-topic)
-beta_df <- tidy(lda_model, matrix = "beta")
-write.csv(beta_df, 
-          paste0("beta_matrix_k", k_optimal, ".csv"), 
-          row.names = FALSE)
 ```
 
-## Analyse et représentation de notre modèle
+## Visualisations avancées
 
-``` r
- #==============================================================================
-  # 10. Autre visu et test distance, UMAP
-  # ==============================================================================
+```{r visualisations, exercise=TRUE, exercise.setup="lda-model", exercise.lines=100}
+# ==============================================================================
+# VISUALISATIONS AVANCÉES
+# ==============================================================================
 
 library(LDAvis)
 library(FactoMineR)
@@ -1097,26 +1030,28 @@ library(here)
 ### Représentation intéractive avec LDAvis
 
 # Extraire les informations du modèle LDA
-phi <- posterior(lda_model)$terms  # Distribution des mots par topic (beta)
-theta <- posterior(lda_model)$topics  # Distribution des topics par document (gamma)
-vocab <- colnames(phi)
-doc_length <- rowSums(as.matrix(dtm_for_lda))  # Longueur de chaque document
-term_frequency <- colSums(as.matrix(dtm_for_lda))  # Fréquence de chaque terme
+#phi <- posterior(lda_model)$terms  # Distribution des mots par topic (beta)
+#theta <- posterior(lda_model)$topics  # Distribution des topics par document (gamma)
+#vocab <- colnames(phi)
+#doc_length <- rowSums(as.matrix(dtm_for_lda))  # Longueur de chaque document
+#term_frequency <- colSums(as.matrix(dtm_for_lda))  # Fréquence de chaque terme
 
 # Créer un objet JSON pour LDAvis
-json_lda <- createJSON(
-  phi = phi, #phi : matrice terme-topic (probabilité de chaque mot dans chaque topic)
-  theta = theta, #theta : matrice document-topic (probabilité de chaque topic dans chaque document)
-  doc.length = doc_length, #doc.length : nombre de mots par document
-  vocab = vocab, #vocab : les mots (noms des colonnes du DTM)
-  term.frequency = term_frequency, #term.frequency : fréquence totale de chaque terme
-  R = 30  # Nombre de termes les plus pertinents à afficher
-)
+#json_lda <- createJSON(
+#  phi = phi, #phi : matrice terme-topic (probabilité de chaque mot dans chaque topic)
+#  theta = theta, #theta : matrice document-topic (probabilité de chaque topic dans chaque document)
+#  doc.length = doc_length, #doc.length : nombre de mots par document
+#  vocab = vocab, #vocab : les mots (noms des colonnes du DTM)
+#  term.frequency = term_frequency, #term.frequency : fréquence totale de chaque terme
+#  R = 30  # Nombre de termes les plus pertinents à afficher
+#)
 
 # Visualiser dans le navigateur
-serVis(json_lda, out.dir = "lda_vis", open.browser = TRUE)
+# serVis(json_lda, out.dir = "lda_vis", open.browser = TRUE)
 
 ### Représenter la distance entre nos topics
+
+doc_topics <- topicmodels::posterior(lda_model)$topics
 
 mytopicdist <- dist(doc_topics) %>% as.dist 
 
@@ -1190,6 +1125,28 @@ umap_config$random_state <- 123
 # Calculer UMAP
 umap_result_docs <- umap(gamma_matrix, config = umap_config)
 
+# dataframe des résultats
+
+# Extraire les probabilités gamma (document-topic)
+gamma_topics <- tidy(lda_model, matrix = "gamma")
+
+# Récupérer les sources des documents
+# Trouver le topic dominant pour chaque document
+dominant_topic <- gamma_topics %>%
+  group_by(document) %>%
+  slice_max(gamma, n = 1) %>%
+  ungroup()
+
+doc_ids <- docnames(dfm_clean)
+sources <- docvars(dfm_clean, "source")
+# Trouver le topic dominant pour chaque document
+results_docs <- data.frame(
+  doc_id = doc_ids,
+  source = sources,
+  topic = dominant_topic$topic[match(doc_ids, dominant_topic$document)],
+  probability = dominant_topic$gamma[match(doc_ids, dominant_topic$document)]
+)
+
 # Créer un dataframe avec les résultats
 df_umap_docs <- data.frame(
   doc_id = rownames(gamma_matrix),
@@ -1261,3 +1218,35 @@ ggplot(df_umap_topics, aes(x = umap1, y = umap2, label = paste0("T", topic))) +
        subtitle = "Topics proches = vocabulaire similaire",
        x = "UMAP 1", y = "UMAP 2")
 ```
+
+## Conclusion
+
+### Merci de votre attention et à vous de jouer !
+
+Pour accéder aux données et au dépôt : [**https://github.com/LeCampionG/DataSHS2026_TopicModel/tree/main**](https://github.com/LeCampionG/DataSHS2026_TopicModel/tree/main)
+
+**Contact** : gregoire.lecampion@cnrs.fr
+
+**Diapositives libres** (CC BY-SA 4.0)
+
+### Ce que vous avez appris
+
+✅ Charger et préparer un corpus textuel  
+✅ Tokeniser et nettoyer  
+✅ Lemmatiser (optionnel)  
+✅ Créer et analyser une matrice DFM  
+✅ Optimiser le nombre de topics  
+✅ Construire et analyser un modèle LDA  
+✅ Créer des visualisations avancées  
+
+### Pour aller plus loin
+
+- **BERTopic** : méthode récente (2022) qui tend à devenir la référence (Python)
+- **Correlated Topics Model (CTM)** : extension de LDA
+
+### Ressources
+
+- [Documentation Quanteda](https://quanteda.io/)
+- [Package topicmodels](https://cran.r-project.org/web/packages/topicmodels/)
+- Article LDA : [Blei, Ng & Jordan (2003)](http://www.jmlr.org/papers/volume3/blei03a/blei03a.pdf)
+- Article BERTopic : [Grootendorst (2022)](https://arxiv.org/abs/2203.05794)
