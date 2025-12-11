@@ -315,14 +315,14 @@ corpus_cat_1 <- corpus_subset(corpus_txt, cat == 1)
 # Grouper par métadonnées
 corpus_cat <- corpus_group(corpus_txt, groups = cat)
 
-#Si vous souhaitez visualiser les 200 premiers charactères du 1er texte
+# Si vous souhaitez visualiser les 200 premiers caractères du 1er texte
 cat(substr(as.character(corpus_txt)[1], 1, 200), "...\n\n")
 ```
 
 ## La Tokenisation
 
 ::: {style="font-size: 0.6em;margin-top:20px;"}
-<img src="figure/alert.png" width="30" style="margin-top:0px;margin-bottom:-7px;margin-right:8px;"/>[**C'est une étape importante de la préparation des données, qui nous permets de passer du corpus au "mot".**]{style="color:#4178bc;"}
+<img src="figure/alert.png" width="30" style="margin-top:0px;margin-bottom:-7px;margin-right:8px;"/>[**C'est une étape importante de la préparation des données, qui nous permet de passer du corpus au "mot".**]{style="color:#4178bc;"}
 :::
 
 ``` r
@@ -400,7 +400,7 @@ tokens_txt <- tokens_select(tokens_txt, min_nchar = 2)
 # 3bis. LEMMATISATION EN FRANÇAIS
 # ==============================================================================
 
-# Sachez qu'il est aussi possible d'utiliser les package spacyr et udpipe
+# Sachez qu'il est aussi possible d'utiliser les packages spacyr et udpipe
 # La documentation et l'aide est très riche
 
 #==============================================================================
@@ -427,7 +427,7 @@ lemma_dict <- read.csv(dico_path) # format: nom,lemme
 # 4. CRÉATION DE LA MATRICE DOCUMENT-FEATURE (DFM)
 # ==============================================================================
 
-# Si votre corpus en entrée correspond à une base de données avec des variables de type texte, mots, nombre. Comme ce qu'on peut obtenir après certaines analyses réalisés avec certains logiciel de textométrie, vous pouvez utiliser ce code
+# Si votre corpus en entrée correspond à une base de données avec des variables de type texte, mots, nombre. Comme ce qu'on peut obtenir après certaines analyses réalisées avec certains logiciel de textométrie, vous pouvez utiliser ce code
 #   dtm_ira<- data_ira %>% 
 #     cast_dtm(texte, term = mots, value = nombre)
 
@@ -449,7 +449,7 @@ cat("Sparsité:", round(sparsity(dfm_dico) * 100, 2), "%\n\n")
 
 # Réduire la sparsité (optionnel)
 # Garder les termes qui apparaissent dans au moins 2 documents (recommandation de la doc de Quanteda)
-# Masi en réalité c'est vous qui savez en fonction du matériuax utilisé et des hypothèses
+# Mais en réalité c'est vous qui savez en fonction du matériau utilisé et des hypothèses
 
 dfm_reduit <- dfm_trim(dfm_dico, min_docfreq = 2)
 cat("Après réduction - Sparsité:", round(sparsity(dfm_dico) * 100, 2), "%\n\n")
