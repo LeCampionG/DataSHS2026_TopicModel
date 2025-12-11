@@ -35,19 +35,19 @@ editor: visual
 ## C.N.I du topic modeling
 
 ::: {style="font-size: 0.8em;margin-top:15px;"}
-1- C'est une méthode qui appartient au champs de l'apprentissage non supervisé et au TAL (ou NLP en anglais).
+1- C'est une méthode qui appartient au champ de l'apprentissage non supervisé et au TAL (ou NLP en anglais).
 :::
 
 </br>
 
 ::: {style="font-size: 0.8em;margin-top:10px;"}
-2- Elle repose sur des modèles probabilistes et il existe plusieurs méthodes de topics modeling basées sur différents algorithmes.
+2- Elle repose sur des modèles probabilistes et il existe plusieurs méthodes de topic modeling basées sur différents algorithmes.
 :::
 
 </br>
 
 ::: {style="font-size: 0.8em;margin-top:10px;"}
-3- C'est une approche complète qui repose sur plusieurs métrique et permet de nombreuses représentations.
+3- C'est une approche complète qui repose sur plusieurs métriques et permet de nombreuses représentations.
 :::
 
 </br>
@@ -59,7 +59,7 @@ editor: visual
 ## L'idée à la base du Topic Modeling
 
 ::: {style="font-size: 0.8em;margin-top:20px;"}
-*1-* Un texte va être composé d'un ou de plusieurs topic ou thème. Un texte pourra alors être représenté par une combinaison de ces thèmes.
+*1-* Un texte va être composé d'un ou de plusieurs topics ou thèmes. Un texte pourra alors être représenté par une combinaison de ces thèmes.
 
 *2-* Et chaque thème (ou topic) va donc être caractérisé par un ensemble de mots, il s'agit en fait de clusters de mots.
 :::
@@ -116,7 +116,7 @@ LDA adopte une approche probabiliste, et repose donc sur les deux hypothèses du
 ## Latent Dirichlet Allocation (LDA) II
 
 ::: {style="font-size: 0.8em;margin-top:20px;"}
-L'algorithme va agir en 3 étape :
+L'algorithme va agir en 3 étapes :
 
 1- assigne aléatoirement à chaque mot un topic parmi un nombre K de topics qui aura été spécifié en amont.
 
@@ -146,12 +146,12 @@ Pour réaliser cela LDA va proposer deux méthodes :
 ## Choisir le nombre de topics ?
 
 ::: {style="font-size: 0.8em;margin-top:20px;"}
-> Un nombre trop faible et on obtient quelques thèmes très généraux, un trop grand nombre et on va obtenir des topics qui se chevauchent et/ou ininterprétable.
+> Un nombre trop faible et on obtient quelques thèmes très généraux, un trop grand nombre et on va obtenir des topics qui se chevauchent et/ou ininterprétables.
 :::
 
 </br>
 
-La solution recommandé est une **approche mixte alliant une démarche quantitative et qualitative**.
+La solution recommandée est une **approche mixte alliant une démarche quantitative et qualitative**.
 
 </br>
 
@@ -184,7 +184,7 @@ La solution recommandé est une **approche mixte alliant une démarche quantitat
 ## Conclusion avec la théorie
 
 ::: {style="font-size: 0.8em;margin-top:30px;"}
-[Ce champs **continue d'évoluer et est très dynamique** !]{style="color:#4178bc;"}
+[Ce champ **continue d'évoluer et est très dynamique** !]{style="color:#4178bc;"}
 :::
 
 ::: {style="font-size: 0.8em;margin-top:20px;"}
@@ -192,7 +192,7 @@ On peut toutefois citer :
 
 -   le **correlated topics model** (CTM; Blei and Lafferty 2007) qui est une extension de la méthode LDA où les topics peuvent être corrélés.
 
--   Ou encore la méthode **BERTopic** qui intègre le contexte et le sens des mots, méthode développé en 2022 par [Grootendorst](https://arxiv.org/abs/2203.05794) qui va aussi utilisé des méthodes non paramétrique de réduction de dimensions. Cette méthode est de plus en plus employée, très intéressantes et **tant à devenir la méthode de référence**.
+-   Ou encore la méthode **BERTopic** qui intègre le contexte et le sens des mots, méthode développée en 2022 par [Grootendorst](https://arxiv.org/abs/2203.05794) qui va aussi utiliser des méthodes non paramétriques de réduction de dimensions. Cette méthode est de plus en plus employée, très intéressantes et **tend à devenir la méthode de référence**.
 :::
 
 ::: {style="font-size: 0.6em;margin-top:20px;"}
@@ -222,9 +222,9 @@ Pour accéder aux données et au dépôt : [**https://github.com/LeCampionG/Data
 ## Les données !
 
 ::: {style="font-size: 0.6em;margin-top:20px;"}
-Les données que nous allons travaillé aujourd'hui : un corpus textuel de qualité sur la Bretagne !
+Les données que nous allons utiliser aujourd'hui : un corpus textuel de qualité sur la Bretagne !
 
-En bref, le contenu brut de 8 pages wikipédia sur des fondamentaux de la région Bretagne!
+En bref, le contenu brut de 8 pages wikipédia sur des fondamentaux de la région Bretagne !
 :::
 
 ::: r-stack
@@ -234,7 +234,7 @@ En bref, le contenu brut de 8 pages wikipédia sur des fondamentaux de la régio
 ## Chargement des données
 
 ::: {style="font-size: 0.6em;margin-top:20px;"}
-Si votre corpus texte a déjà fait l'objet d'une analyse par exemple via Iramuteq, il a donc déjà subit un certain nombre d'étape de préparation que nous allons voir maintenant, Dans ce cas vous pouvez vous rendre directement à la case DTM !
+Si votre corpus texte a déjà fait l'objet d'une analyse, par exemple via Iramuteq, il a donc déjà subit un certain nombre d'étapes de préparation que nous allons voir maintenant, Dans ce cas vous pouvez vous rendre directement à la case DTM !
 :::
 
 ``` r
@@ -315,14 +315,14 @@ corpus_cat_1 <- corpus_subset(corpus_txt, cat == 1)
 # Grouper par métadonnées
 corpus_cat <- corpus_group(corpus_txt, groups = cat)
 
-#Si vous souhaitez visualiser les 200 premiers charactères du 1er texte
+# Si vous souhaitez visualiser les 200 premiers caractères du 1er texte
 cat(substr(as.character(corpus_txt)[1], 1, 200), "...\n\n")
 ```
 
 ## La Tokenisation
 
 ::: {style="font-size: 0.6em;margin-top:20px;"}
-<img src="figure/alert.png" width="30" style="margin-top:0px;margin-bottom:-7px;margin-right:8px;"/>[**C'est une étape importante de la préparation des données, qui nous permets de passer du corpus au "mot".**]{style="color:#4178bc;"}
+<img src="figure/alert.png" width="30" style="margin-top:0px;margin-bottom:-7px;margin-right:8px;"/>[**C'est une étape importante de la préparation des données, qui nous permet de passer du corpus au "mot".**]{style="color:#4178bc;"}
 :::
 
 ``` r
@@ -400,7 +400,7 @@ tokens_txt <- tokens_select(tokens_txt, min_nchar = 2)
 # 3bis. LEMMATISATION EN FRANÇAIS
 # ==============================================================================
 
-# Sachez qu'il est aussi possible d'utiliser les package spacyr et udpipe
+# Sachez qu'il est aussi possible d'utiliser les packages spacyr et udpipe
 # La documentation et l'aide est très riche
 
 #==============================================================================
@@ -427,7 +427,7 @@ lemma_dict <- read.csv(dico_path) # format: nom,lemme
 # 4. CRÉATION DE LA MATRICE DOCUMENT-FEATURE (DFM)
 # ==============================================================================
 
-# Si votre corpus en entrée correspond à une base de données avec des variables de type texte, mots, nombre. Comme ce qu'on peut obtenir après certaines analyses réalisés avec certains logiciel de textométrie, vous pouvez utiliser ce code
+# Si votre corpus en entrée correspond à une base de données avec des variables de type texte, mots, nombre. Comme ce qu'on peut obtenir après certaines analyses réalisées avec certains logiciel de textométrie, vous pouvez utiliser ce code
 #   dtm_ira<- data_ira %>% 
 #     cast_dtm(texte, term = mots, value = nombre)
 
@@ -449,7 +449,7 @@ cat("Sparsité:", round(sparsity(dfm_dico) * 100, 2), "%\n\n")
 
 # Réduire la sparsité (optionnel)
 # Garder les termes qui apparaissent dans au moins 2 documents (recommandation de la doc de Quanteda)
-# Masi en réalité c'est vous qui savez en fonction du matériuax utilisé et des hypothèses
+# Mais en réalité c'est vous qui savez en fonction du matériau utilisé et des hypothèses
 
 dfm_reduit <- dfm_trim(dfm_dico, min_docfreq = 2)
 cat("Après réduction - Sparsité:", round(sparsity(dfm_dico) * 100, 2), "%\n\n")
@@ -480,7 +480,6 @@ df_final_dico <- df_long_dico %>%
 colnames(df_final_dico) <- c("mot", "texte_source", "frequence", "categorie", "sujet")
 
 head(df_final_dico)
-
 ```
 
 ## Un peu d'exploration
