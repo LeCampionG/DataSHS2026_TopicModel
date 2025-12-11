@@ -8,7 +8,7 @@
 <link href="index_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="index_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="index_files/libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.5.52">
+  <meta name="generator" content="quarto-1.4.551">
 
   <meta name="author" content="Initiation au Topic Modeling avec R">
   <title>Semaine Data SHS 2025</title>
@@ -42,7 +42,7 @@
     }
     @media print {
     pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
     }
     pre.numberSource code
       { counter-reset: source-line 0; }
@@ -421,15 +421,15 @@ Initiation au Topic Modeling avec R<br>
 <section id="c.n.i-du-topic-modeling" class="slide level2">
 <h2>C.N.I du topic modeling</h2>
 <div style="font-size: 0.8em;margin-top:15px;">
-<p>1- C’est une méthode qui appartient au champs de l’apprentissage non supervisé et au TAL (ou NLP en anglais).</p>
+<p>1- C’est une méthode qui appartient au champ de l’apprentissage non supervisé et au TAL (ou NLP en anglais).</p>
 </div>
 <p><br></p>
 <div style="font-size: 0.8em;margin-top:10px;">
-<p>2- Elle repose sur des modèles probabilistes et il existe plusieurs méthodes de topics modeling basées sur différents algorithmes.</p>
+<p>2- Elle repose sur des modèles probabilistes et il existe plusieurs méthodes de topic modeling basées sur différents algorithmes.</p>
 </div>
 <p><br></p>
 <div style="font-size: 0.8em;margin-top:10px;">
-<p>3- C’est une approche complète qui repose sur plusieurs métrique et permet de nombreuses représentations.</p>
+<p>3- C’est une approche complète qui repose sur plusieurs métriques et permet de nombreuses représentations.</p>
 </div>
 <p><br></p>
 <div style="font-size: 0.8em;margin-top:10px;">
@@ -439,7 +439,7 @@ Initiation au Topic Modeling avec R<br>
 <section id="lidée-à-la-base-du-topic-modeling" class="slide level2">
 <h2>L’idée à la base du Topic Modeling</h2>
 <div style="font-size: 0.8em;margin-top:20px;">
-<p><em>1-</em> Un texte va être composé d’un ou de plusieurs topic ou thème. Un texte pourra alors être représenté par une combinaison de ces thèmes.</p>
+<p><em>1-</em> Un texte va être composé d’un ou de plusieurs topics ou thèmes. Un texte pourra alors être représenté par une combinaison de ces thèmes.</p>
 <p><em>2-</em> Et chaque thème (ou topic) va donc être caractérisé par un ensemble de mots, il s’agit en fait de clusters de mots.</p>
 </div>
 <p><br></p>
@@ -481,7 +481,7 @@ Initiation au Topic Modeling avec R<br>
 <section id="latent-dirichlet-allocation-lda-ii" class="slide level2">
 <h2>Latent Dirichlet Allocation (LDA) II</h2>
 <div style="font-size: 0.8em;margin-top:20px;">
-<p>L’algorithme va agir en 3 étape :</p>
+<p>L’algorithme va agir en 3 étapes :</p>
 <p>1- assigne aléatoirement à chaque mot un topic parmi un nombre K de topics qui aura été spécifié en amont.</p>
 <p><br></p>
 <p>2- parcourt chaque document mot à mot, et met à jour les topics de chaque mot, par un calcul de probabilité.</p>
@@ -503,11 +503,11 @@ Initiation au Topic Modeling avec R<br>
 <h2>Choisir le nombre de topics ?</h2>
 <div style="font-size: 0.8em;margin-top:20px;">
 <blockquote>
-<p>Un nombre trop faible et on obtient quelques thèmes très généraux, un trop grand nombre et on va obtenir des topics qui se chevauchent et/ou ininterprétable.</p>
+<p>Un nombre trop faible et on obtient quelques thèmes très généraux, un trop grand nombre et on va obtenir des topics qui se chevauchent et/ou ininterprétables.</p>
 </blockquote>
 </div>
 <p><br></p>
-<p>La solution recommandé est une <strong>approche mixte alliant une démarche quantitative et qualitative</strong>.</p>
+<p>La solution recommandée est une <strong>approche mixte alliant une démarche quantitative et qualitative</strong>.</p>
 <p><br></p>
 <div style="font-size: 0.8em;margin-top:10px;">
 <p><span style="color:#4178bc;"><strong>Point crucial : Les métriques quantitatives guident, mais l’interprétabilité humaine doit avoir le dernier mot. Un modèle avec d’excellentes métriques mais des topics incompréhensibles est inutile en pratique.</strong></span></p>
@@ -538,13 +538,13 @@ Initiation au Topic Modeling avec R<br>
 <section id="conclusion-avec-la-théorie" class="slide level2">
 <h2>Conclusion avec la théorie</h2>
 <div style="font-size: 0.8em;margin-top:30px;">
-<p><span style="color:#4178bc;">Ce champs <strong>continue d’évoluer et est très dynamique</strong> !</span></p>
+<p><span style="color:#4178bc;">Ce champ <strong>continue d’évoluer et est très dynamique</strong> !</span></p>
 </div>
 <div style="font-size: 0.8em;margin-top:20px;">
 <p>On peut toutefois citer :</p>
 <ul>
 <li><p>le <strong>correlated topics model</strong> (CTM; Blei and Lafferty 2007) qui est une extension de la méthode LDA où les topics peuvent être corrélés.</p></li>
-<li><p>Ou encore la méthode <strong>BERTopic</strong> qui intègre le contexte et le sens des mots, méthode développé en 2022 par <a href="https://arxiv.org/abs/2203.05794">Grootendorst</a> qui va aussi utilisé des méthodes non paramétrique de réduction de dimensions. Cette méthode est de plus en plus employée, très intéressantes et <strong>tant à devenir la méthode de référence</strong>.</p></li>
+<li><p>Ou encore la méthode <strong>BERTopic</strong> qui intègre le contexte et le sens des mots, méthode développée en 2022 par <a href="https://arxiv.org/abs/2203.05794">Grootendorst</a> qui va aussi utiliser des méthodes non paramétriques de réduction de dimensions. Cette méthode est de plus en plus employée, très intéressantes et <strong>tend à devenir la méthode de référence</strong>.</p></li>
 </ul>
 </div>
 <div style="font-size: 0.6em;margin-top:20px;">
@@ -567,8 +567,8 @@ Initiation au Topic Modeling avec R<br>
 <section id="les-données" class="slide level2">
 <h2>Les données !</h2>
 <div style="font-size: 0.6em;margin-top:20px;">
-<p>Les données que nous allons travaillé aujourd’hui : un corpus textuel de qualité sur la Bretagne !</p>
-<p>En bref, le contenu brut de 8 pages wikipédia sur des fondamentaux de la région Bretagne!</p>
+<p>Les données que nous allons utiliser aujourd’hui : un corpus textuel de qualité sur la Bretagne !</p>
+<p>En bref, le contenu brut de 8 pages wikipédia sur des fondamentaux de la région Bretagne !</p>
 </div>
 <div class="r-stack">
 <p><img src="figure/image.png" width="800" style="margin-top:15px;margin-bottom:0px"></p>
@@ -577,7 +577,7 @@ Initiation au Topic Modeling avec R<br>
 <section id="chargement-des-données" class="slide level2">
 <h2>Chargement des données</h2>
 <div style="font-size: 0.6em;margin-top:20px;">
-<p>Si votre corpus texte a déjà fait l’objet d’une analyse par exemple via Iramuteq, il a donc déjà subit un certain nombre d’étape de préparation que nous allons voir maintenant, Dans ce cas vous pouvez vous rendre directement à la case DTM !</p>
+<p>Si votre corpus texte a déjà fait l’objet d’une analyse, par exemple via Iramuteq, il a donc déjà subit un certain nombre d’étapes de préparation que nous allons voir maintenant, Dans ce cas vous pouvez vous rendre directement à la case DTM !</p>
 </div>
 <div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="co"># ==============================================================================</span></span>
 <span id="cb1-2"><a href=""></a><span class="co"># 1. CHARGEMENT DES FICHIERS TXT AVEC MÉTADONNÉES</span></span>
@@ -654,13 +654,13 @@ Initiation au Topic Modeling avec R<br>
 <span id="cb2-24"><a href=""></a><span class="co"># Grouper par métadonnées</span></span>
 <span id="cb2-25"><a href=""></a>corpus_cat <span class="ot">&lt;-</span> <span class="fu">corpus_group</span>(corpus_txt, <span class="at">groups =</span> cat)</span>
 <span id="cb2-26"><a href=""></a></span>
-<span id="cb2-27"><a href=""></a><span class="co">#Si vous souhaitez visualiser les 200 premiers charactères du 1er texte</span></span>
+<span id="cb2-27"><a href=""></a><span class="co"># Si vous souhaitez visualiser les 200 premiers caractères du 1er texte</span></span>
 <span id="cb2-28"><a href=""></a><span class="fu">cat</span>(<span class="fu">substr</span>(<span class="fu">as.character</span>(corpus_txt)[<span class="dv">1</span>], <span class="dv">1</span>, <span class="dv">200</span>), <span class="st">"...</span><span class="sc">\n\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="la-tokenisation" class="slide level2">
 <h2>La Tokenisation</h2>
 <div style="font-size: 0.6em;margin-top:20px;">
-<p><img src="figure/alert.png" width="30" style="margin-top:0px;margin-bottom:-7px;margin-right:8px;"><span style="color:#4178bc;"><strong>C’est une étape importante de la préparation des données, qui nous permets de passer du corpus au “mot”.</strong></span></p>
+<p><img src="figure/alert.png" width="30" style="margin-top:0px;margin-bottom:-7px;margin-right:8px;"><span style="color:#4178bc;"><strong>C’est une étape importante de la préparation des données, qui nous permet de passer du corpus au “mot”.</strong></span></p>
 </div>
 <div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a></span>
 <span id="cb3-2"><a href=""></a><span class="co"># ==============================================================================</span></span>
@@ -733,7 +733,7 @@ Initiation au Topic Modeling avec R<br>
 <span id="cb4-2"><a href=""></a><span class="co"># 3bis. LEMMATISATION EN FRANÇAIS</span></span>
 <span id="cb4-3"><a href=""></a><span class="co"># ==============================================================================</span></span>
 <span id="cb4-4"><a href=""></a></span>
-<span id="cb4-5"><a href=""></a><span class="co"># Sachez qu'il est aussi possible d'utiliser les package spacyr et udpipe</span></span>
+<span id="cb4-5"><a href=""></a><span class="co"># Sachez qu'il est aussi possible d'utiliser les packages spacyr et udpipe</span></span>
 <span id="cb4-6"><a href=""></a><span class="co"># La documentation et l'aide est très riche</span></span>
 <span id="cb4-7"><a href=""></a></span>
 <span id="cb4-8"><a href=""></a><span class="co">#==============================================================================</span></span>
@@ -758,7 +758,7 @@ Initiation au Topic Modeling avec R<br>
 <span id="cb5-2"><a href=""></a><span class="co"># 4. CRÉATION DE LA MATRICE DOCUMENT-FEATURE (DFM)</span></span>
 <span id="cb5-3"><a href=""></a><span class="co"># ==============================================================================</span></span>
 <span id="cb5-4"><a href=""></a></span>
-<span id="cb5-5"><a href=""></a><span class="co"># Si votre corpus en entrée correspond à une base de données avec des variables de type texte, mots, nombre. Comme ce qu'on peut obtenir après certaines analyses réalisés avec certains logiciel de textométrie, vous pouvez utiliser ce code</span></span>
+<span id="cb5-5"><a href=""></a><span class="co"># Si votre corpus en entrée correspond à une base de données avec des variables de type texte, mots, nombre. Comme ce qu'on peut obtenir après certaines analyses réalisées avec certains logiciel de textométrie, vous pouvez utiliser ce code</span></span>
 <span id="cb5-6"><a href=""></a><span class="co">#   dtm_ira&lt;- data_ira %&gt;% </span></span>
 <span id="cb5-7"><a href=""></a><span class="co">#     cast_dtm(texte, term = mots, value = nombre)</span></span>
 <span id="cb5-8"><a href=""></a></span>
@@ -780,7 +780,7 @@ Initiation au Topic Modeling avec R<br>
 <span id="cb5-24"><a href=""></a></span>
 <span id="cb5-25"><a href=""></a><span class="co"># Réduire la sparsité (optionnel)</span></span>
 <span id="cb5-26"><a href=""></a><span class="co"># Garder les termes qui apparaissent dans au moins 2 documents (recommandation de la doc de Quanteda)</span></span>
-<span id="cb5-27"><a href=""></a><span class="co"># Masi en réalité c'est vous qui savez en fonction du matériuax utilisé et des hypothèses</span></span>
+<span id="cb5-27"><a href=""></a><span class="co"># Mais en réalité c'est vous qui savez en fonction du matériau utilisé et des hypothèses</span></span>
 <span id="cb5-28"><a href=""></a></span>
 <span id="cb5-29"><a href=""></a>dfm_reduit <span class="ot">&lt;-</span> <span class="fu">dfm_trim</span>(dfm_dico, <span class="at">min_docfreq =</span> <span class="dv">2</span>)</span>
 <span id="cb5-30"><a href=""></a><span class="fu">cat</span>(<span class="st">"Après réduction - Sparsité:"</span>, <span class="fu">round</span>(<span class="fu">sparsity</span>(dfm_dico) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">2</span>), <span class="st">"%</span><span class="sc">\n\n</span><span class="st">"</span>)</span>
@@ -1828,7 +1828,18 @@ Initiation au Topic Modeling avec R<br>
         }
         return false;
       }
-      const onCopySuccess = function(e) {
+      const clipboard = new window.ClipboardJS('.code-copy-button', {
+        text: function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+      });
+      clipboard.on('success', function(e) {
         // button target
         const button = e.trigger;
         // don't keep focus
@@ -1860,29 +1871,7 @@ Initiation au Topic Modeling avec R<br>
         }, 1000);
         // clear code selection
         e.clearSelection();
-      }
-      const getTextToCopy = function(trigger) {
-          const codeEl = trigger.previousElementSibling.cloneNode(true);
-          for (const childEl of codeEl.children) {
-            if (isCodeAnnotation(childEl)) {
-              childEl.remove();
-            }
-          }
-          return codeEl.innerText;
-      }
-      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-        text: getTextToCopy
       });
-      clipboard.on('success', onCopySuccess);
-      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-        // For code content inside modals, clipBoardJS needs to be initialized with a container option
-        // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
-        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-          text: getTextToCopy,
-          container: window.document.getElementById('quarto-embedded-source-code-modal')
-        });
-        clipboardModal.on('success', onCopySuccess);
-      }
         var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
         var mailtoRegex = new RegExp(/^mailto:/);
           var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -1890,7 +1879,7 @@ Initiation au Topic Modeling avec R<br>
             return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
         }
         // Inspect non-navigation links and adorn them if external
-     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
         for (var i=0; i<links.length; i++) {
           const link = links[i];
           if (!isInternal(link.href)) {
